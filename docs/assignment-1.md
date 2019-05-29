@@ -1,2 +1,2 @@
-## Assignment 0x01: Create a Shell_Bind_TCP shellcode
+## Assignment 0x01: Create A Shell_Bind_TCP Shellcode
 ---
