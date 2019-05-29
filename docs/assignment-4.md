@@ -1,2 +1,2 @@
-## Assignment 0x04
+## Assignment 0x04: Custom Encoding
 ---
