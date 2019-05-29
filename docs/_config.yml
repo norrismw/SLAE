@@ -1,4 +1,4 @@
 theme: jekyll-theme-minimal
 title: x86 Assembly Language and Shellcoding on Linux
 description: "By Michael Norris // Student ID: SLAE-XXXX"
-logo: [SHELLCODE32.png]
+logo: [/SHELLCODE32.png]
