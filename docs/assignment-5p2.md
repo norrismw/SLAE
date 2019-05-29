@@ -1,6 +1,7 @@
 ## Assignment 0x05, part II
 ---
-This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:
+_This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
+
 http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert
 
-Student ID: SLAE-1469
+_Student ID: SLAE-1469_
