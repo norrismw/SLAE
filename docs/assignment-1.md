@@ -7,4 +7,4 @@ _This blog post has been created for completing the requirements of the Security
 _Student ID: SLAE-1469_
 
 ---
-[Home](/)
+[Home](/SLAE)
