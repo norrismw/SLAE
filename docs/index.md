@@ -1,37 +1,16 @@
-## Welcome to GitHub Pages
+## Welcome
 
-You can use the [editor on GitHub](https://github.com/norrismw/test/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This is the repository for my x86 Assembly Language and Shellcoding on Linux course work.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Table of Contents
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/norrismw/test/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+[Assignement 0x01](https://norrismw.github.io/SLAE/assignment-1)
+[Assignement 0x02](https://norrismw.github.io/SLAE/assignment-2)
+[Assignement 0x03](https://norrismw.github.io/SLAE/assignment-3)
+[Assignement 0x04](https://norrismw.github.io/SLAE/assignment-4)
+[Assignement 0x05](https://norrismw.github.io/SLAE/assignment-5)
+[Assignement 0x05, part I](https://norrismw.github.io/SLAE/assignment-5p1)
+[Assignement 0x05. part II](https://norrismw.github.io/SLAE/assignment-5p2)
+[Assignement 0x05, part III](https://norrismw.github.io/SLAE/assignment-5p3)
+[Assignement 0x06](https://norrismw.github.io/SLAE/assignment-6)
+[Assignement 0x07](https://norrismw.github.io/SLAE/assignment-7)
