@@ -4,7 +4,6 @@
 global _start
 
 section .text
-
 _start:
         ; print hello world on the screen
         mov eax, 0x4
@@ -19,6 +18,5 @@ _start:
         int 0x80
 
 section .data
-
         message: db "Hello, world!"
         mlen:    equ $-message
