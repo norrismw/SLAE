@@ -1,4 +1,4 @@
- Filename: LoopTest.nasm
+; Filename: LoopTest.nasm
 ; Author: Michael Norris
 
 global _start
