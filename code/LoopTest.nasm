@@ -12,7 +12,7 @@ SetCounter:
 SaveCounter:
     push ecx 
 
-PrintHW:
+PrintMessage:
     mov eax, 0x4        ; sys_write
     mov ebx, 0x1    
     mov ecx, message
