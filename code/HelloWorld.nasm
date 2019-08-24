@@ -1,4 +1,4 @@
-; HelloWorld.asm
+; HelloWorld.nasm
 ; Author: Michael Norris
 
 global _start
