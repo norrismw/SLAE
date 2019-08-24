@@ -7,7 +7,6 @@ section .text
 
 _start:
         ; print hello world on the screen
-
         mov eax, 0x4
         mov ebx, 0x1
         mov ecx, message
@@ -15,7 +14,6 @@ _start:
         int 0x80
 
         ; exit the program gracefully
-
         mov eax, 0x1
         mov ebx, 0x5
         int 0x80
@@ -23,4 +21,4 @@ _start:
 section .data
 
         message: db "Hello, world!"
-        mlen    equ $-message
+        mlen:    equ $-message
