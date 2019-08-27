@@ -23,9 +23,9 @@ end = 1
 
 print '[!] String details ... \n'
 
-print '[*] ' + str(double_words) + ' four-byte chunks.'
+print '[*] ' + str(double_words) + ' four-byte chunk(s).'
 print '[*] ' + str(left_over) + ' left over byte(s).'
-print '[*] ' + str(len(string)) + ' total bytes.\n'
+print '[*] ' + str(len(string)) + ' total byte(s).\n'
 
 print '[!] Assembly ... \n'
 
