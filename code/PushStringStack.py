@@ -27,7 +27,7 @@ print("[*] " + str(len(string)) + " total bytes.\n")
 print("[!] Assembly ... \n")
 
 print("xor edx, edx")
-print("push edx")                                               # terminate with 0x00; then, store bytes last-to-first
+print("push edx")
 
 if left_over == 1:
     print("mov dl, 0x" + rev_hex[:left_over * 2])
