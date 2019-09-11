@@ -12,8 +12,9 @@ from forticonf import fortigate
 
 def get_policies():
     policy_string = net_connect.send_command('show firewall policy | grep edit')
-    #print('a') ##
-    return [int(s) for s in policy_string.split() if s.isdigit()]
+    policy_list = [int(s) for s in policy_string.split() if s.isdigit()]
+    policy_list.append(0)
+    return policy_list
 
 
 ## used regardless of choice; used in clear_count() and messy_list()
@@ -32,8 +33,7 @@ def gen_commands():
 def clear_count():
     print('[!] Clearing hit counts ...')
     for command in gen_commands():
-        print('') ##
-        #net_connect.send_command(command)
+        net_connect.send_command(command)
     return 0
 
 
@@ -43,7 +43,6 @@ def clear_count():
 def messy_list():
     messy_list = []
     for command in gen_commands():
-        #print('b') ##
         messy_list.append(net_connect.send_command(command))
     return messy_list
 
@@ -70,7 +69,6 @@ def is_disabled():
     print('[*] Determining which policies are disabled ...')
     disabled_dict = dict.fromkeys(get_policies())
     for policy_key in disabled_dict:
-        #print('c') ##
         if net_connect.send_command('show firewall policy ' + str(policy_key) + ' | grep "set status disable"') != '':
             disabled_dict[policy_key] = 'disabled'
         else:
