@@ -89,7 +89,7 @@ def push_argv():
     if count_string(string)[1] == 0: # zero left over bytes
         leftover_push = 0
         base += (leftover_push * 2)
-        for x in range(0, len(replace_count(string))- 1):
+        for x in range(0, len(replace_count(string)) - 1):
             print('lea ebx, [ebp-8]')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
@@ -97,7 +97,7 @@ def push_argv():
     elif count_string(string)[1] == 3: # three left over bytes
         leftover_push = 2
         base += (leftover_push * 2)
-        for x in range(0, len(replace_count(string))- 1):
+        for x in range(0, len(replace_count(string)) - 1):
             print('lea ebx, [ebp-12]')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
@@ -106,7 +106,7 @@ def push_argv():
     else: # 1 or 2 left over bytes
         leftover_push = 1
         base += (leftover_push * 2)
-        for x in range(0, len(replace_count(string))- 1):
+        for x in range(0, len(replace_count(string)) - 1):
             print('lea ebx, [ebp-10]')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
