@@ -37,20 +37,20 @@ def rev_hex_div4():
     return reverse_hex(string)[count_string(string)[1] * 2::] # a string of n bytes where n % 4 = 0
 
 
-def counter_pls():
+def space_distances():
     a = -1 
     b = -2
-    my_list = []
+    space_distances = []
     if not count_string(string)[1] % 2: # if there are 0 or 2 left over bytes
         base = 5
     else: # if there are 1 or 3 left over bytes
         base = 6
-    for x in range(0, len(replace_count(string)) - 1):
-        my_list.append(replace_count(string)[a] - replace_count(string)[b] + base)
-        base += replace_count(string)[a] - replace_count(string)[b]
+    for x in range(0, len(replace_count(string)) - 1): # for how many spaces in string - 1; 3 spaces means 2 distances between
+        space_distances.append(replace_count(string)[a] - replace_count(string)[b] + base) # i.e. ([-1] - [-2]) then ([-2] - [-3])
+        base += replace_count(string)[a] - replace_count(string)[b] # sets new base based on difference
         b = b - 1
         a = a - 1
-    return my_list
+    return space_distances
 
 
 ## core print functions
@@ -60,23 +60,23 @@ def push_string_stack():
     print('xor edx, edx')
     print('push edx')
     if count_string(string)[1] == 1: # 1 left over bytes
-        print('mov dl, 0x' + reverse_hex(string)[:count_string(string)[1] * 2])
+        print('mov dl, 0x' + reverse_hex(string)[:count_string(string)[1] * 2]) # one byte; reverse_hex(string)[:2]
         print('push dx')
         print('xor edx, edx')
     if count_string(string)[1] == 2: # 2 left over bytes
-        print('mov dx, 0x' + reverse_hex(string)[:count_string(string)[1] * 2])
+        print('mov dx, 0x' + reverse_hex(string)[:count_string(string)[1] * 2]) # two bytes; reverse_hex(string)[:4]
         print('push dx')
         print('xor edx, edx')
     if count_string(string)[1] == 3: # 3 left over bytes
-        print('mov dl, 0x' + reverse_hex(string)[:2])
+        print('mov dl, 0x' + reverse_hex(string)[:2]) # one byte
         print('push dx')
         print('xor ecx, ecx')
-        print('mov cx, 0x' + reverse_hex(string)[2:6])
+        print('mov cx, 0x' + reverse_hex(string)[2:6]) # two bytes
         print('push cx')
         print('xor edx, edx')
         print('xor ecx, ecx')
-    for x in range(0, count_string(string)[0]):
-        print('push 0x' + rev_hex_div4()[start * 8:end * 8])
+    for x in range(0, count_string(string)[0]): # for how many complete 4 byte chunks (double words)
+        print('push 0x' + rev_hex_div4()[start * 8:end * 8]) # if 3; i.e. [0:8] then [8:16] then [16:24]
         start = start + 1
         end = end + 1
 
@@ -99,30 +99,30 @@ def prepare_stack_string():
 
 
 def push_argv():
-    base = 4
-    print('xor ebx, ebx') # \0\0\0\0
-    print('push ebx') # \0\0\0\0 NULL terminates argv[]
+    print('xor ebx, ebx')
+    print('push ebx') # \0\0\0\0 NULL terminates 'char *const argv[]'
+    base = 4 # due to the two instructions above, ebp-4
     if count_string(string)[1] == 0: # zero left over bytes
-        leftover_push = 0
-        base += (leftover_push * 2)
-        for x in counter_pls():
-            print('lea ebx, [ebp-' + str(x - 1) + ']')
-            print('push ebx')
-        print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
-        print('push ebx')
+        leftover_push = 0 # there are 0 extra push dx
+        base += (leftover_push * 2) # therefore, ebp-4
+        for x in space_distances(): # for each distance between space_distances[] in string; load 'char *const argv[]', right to left
+            print('lea ebx, [ebp-' + str(x - 1) + ']') # loads a 'char *const argv[]' parameter
+            print('push ebx') # pushes a 'char *const argv[]' parameter
+        print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')  # loads filename for 'const char *path'
+        print('push ebx') # pushes filename for 'char *const argv[0]'
     elif count_string(string)[1] == 3: # three left over bytes
-        leftover_push = 2
-        base += (leftover_push * 2)
-        for x in counter_pls():
+        leftover_push = 2 # there is one extra push dx and one extra push cx
+        base += (leftover_push * 2) # therefore, ebp-8
+        for x in space_distances():
             print('lea ebx, [ebp-' + str(x - 1) + ']')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
         print('push ebx')
         print('xor ecx, ecx')
     else: # 1 or 2 left over bytes
-        leftover_push = 1
-        base += (leftover_push * 2)
-        for x in counter_pls():
+        leftover_push = 1 # there is one extra push dx
+        base += (leftover_push * 2) # therefore, ebp-6
+        for x in space_distances():
             print('lea ebx, [ebp-' + str(x - 1) + ']')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
@@ -143,6 +143,7 @@ def string_details():
     print('[*] ' + str(len(string)) + ' total byte(s).\n')
     print('[!] Assembly ... \n')
 
+    
 def sys_execve():
     print('mov al, 0xb')
     print('int 0x80')
@@ -152,10 +153,11 @@ def complete():
     print('\n[+] Complete!')
 
 
-string_details()
+## functions
+#string_details()
 easy_addressing()
 push_string_stack()
 prepare_stack_string()
 push_argv()
 sys_execve()
-complete()
+#complete()
