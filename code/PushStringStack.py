@@ -143,8 +143,9 @@ def string_details():
     print('[*] ' + str(len(string)) + ' total byte(s).\n')
     print('[!] Assembly ... \n')
 
-    
+
 def sys_execve():
+    print('xor eax, eax')
     print('mov al, 0xb')
     print('int 0x80')
 
