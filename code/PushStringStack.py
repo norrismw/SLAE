@@ -37,6 +37,22 @@ def rev_hex_div4():
     return reverse_hex(string)[count_string(string)[1] * 2::] # a string of n bytes where n % 4 = 0
 
 
+def counter_pls():
+    a = -1 
+    b = -2
+    my_list = []
+    if not count_string(string)[1] % 2: # if there are 0 or 2 left over bytes
+        base = 5
+    else: # if there are 1 or 3 left over bytes
+        base = 6
+    for x in range(0, len(replace_count(string)) - 1):
+        my_list.append(replace_count(string)[a] - replace_count(string)[b] + base)
+        base += replace_count(string)[a] - replace_count(string)[b]
+        b = b - 1
+        a = a - 1
+    return my_list
+
+
 ## core print functions
 def push_string_stack():
     start = 0
@@ -75,7 +91,7 @@ def prepare_stack_string():
     else: # if there are 1 or 3 left over bytes
         print('mov byte [ebp-6], dl') # replaces terminating \x20 with \x00
         base = 6
-    for x in range(0, len(replace_count(string))- 1): # replaces the rest of \x20 with \x00
+    for x in range(0, len(replace_count(string)) - 1): # replaces the rest of \x20 with \x00
         print('mov byte [ebp-' + str(replace_count(string)[a] - replace_count(string)[b] + base) + '], dl')
         base += replace_count(string)[a] - replace_count(string)[b]
         b = b - 1
@@ -89,16 +105,16 @@ def push_argv():
     if count_string(string)[1] == 0: # zero left over bytes
         leftover_push = 0
         base += (leftover_push * 2)
-        for x in range(0, len(replace_count(string)) - 1):
-            print('lea ebx, [ebp-8]')
+        for x in counter_pls():
+            print('lea ebx, [ebp-' + str(x - 1) + ']')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
         print('push ebx')
     elif count_string(string)[1] == 3: # three left over bytes
         leftover_push = 2
         base += (leftover_push * 2)
-        for x in range(0, len(replace_count(string)) - 1):
-            print('lea ebx, [ebp-12]')
+        for x in counter_pls():
+            print('lea ebx, [ebp-' + str(x - 1) + ']')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
         print('push ebx')
@@ -106,8 +122,8 @@ def push_argv():
     else: # 1 or 2 left over bytes
         leftover_push = 1
         base += (leftover_push * 2)
-        for x in range(0, len(replace_count(string)) - 1):
-            print('lea ebx, [ebp-10]')
+        for x in counter_pls():
+            print('lea ebx, [ebp-' + str(x - 1) + ']')
             print('push ebx')
         print('lea ebx, [ebp-' + str((count_string(string)[0] * 4) + base) + ']')
         print('push ebx')
