@@ -132,9 +132,30 @@ def push_argv():
 
 
 ## formatting functions
+def easy_addressing():
+    print('mov ebp, esp')
+
+
 def string_details():
     print('[!] String details ... \n')
     print('[*] ' + str(count_string(string)[0]) + ' four-byte chunk(s).')
     print('[*] ' + str(count_string(string)[1]) + ' left over byte(s).')
     print('[*] ' + str(len(string)) + ' total byte(s).\n')
     print('[!] Assembly ... \n')
+
+def sys_execve():
+    print('mov al, 0xb')
+    print('int 0x80')
+
+
+def complete():
+    print('\n[+] Complete!')
+
+
+string_details()
+easy_addressing()
+push_string_stack()
+prepare_stack_string()
+push_argv()
+sys_execve()
+complete()
