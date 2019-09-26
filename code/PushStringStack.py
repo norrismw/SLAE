@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # PushStringStack.py
+# Author: Michael Norris
 # Generates x86 assembly code to store a user-supplied string on the stack & clear any used registers.
 # Usage: python PushStringStack.py <string>
 # Example: python PushStringStack.py $'Push it good\nPush it real good\nPush it good\P-push it real good\n'
