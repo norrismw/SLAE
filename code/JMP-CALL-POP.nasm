@@ -1,6 +1,6 @@
 ; JMP-CALL-POP.nasm 
 ; Author: Michael Norris
-; Purpose: Demonstration of JUMP-CALL-POP
+; Purpose: Demonstration of JMP-CALL-POP
 
 global _start
 
