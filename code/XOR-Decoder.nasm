@@ -1,4 +1,4 @@
-; Filename: xor-decoder.nasm
+; Filename: XOR-Decoder.nasm
 ; Author:  Michael Norris
 ; Purpose: Demonstrate basic XOR encoder
 
