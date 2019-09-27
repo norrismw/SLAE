@@ -1,4 +1,4 @@
-; JUMP-CALL-POP.nasm 
+; JMP-CALL-POP.nasm 
 ; Author: Michael Norris
 ; Purpose: Demonstration of JUMP-CALL-POP
 
