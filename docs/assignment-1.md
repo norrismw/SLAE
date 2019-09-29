@@ -40,7 +40,7 @@ In this case, the domain argument `AF_INET` specifies the IPv4 communication pro
 
 Next, the `sockaddr_in` IP socket address struct is created which is used in the forthcoming `bind` method. As further explained in `man 7 ip`, an IP  socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number.
 
-The man page also states that `sin_family` is always set to `AF_INET`, that `sin_port` defines a port number in network byte order (provided through `htons()` in this example), and that `sin_addr` is the host IP address and should be assigned one of the `INADDR_*` values. 
+The man page also states that `sin_family` is always set to `AF_INET`, that `sin_port` defines a port number in network byte order (provided through `htons()` in this example), and that `sin_addr` is the host IP address and should be assigned one of the `INADDR_*` values (`INADDR_ANY` a.k.a `0.0.0.0` in this case). 
 
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
