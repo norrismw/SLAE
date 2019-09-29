@@ -39,12 +39,12 @@ In this case, the domain argument `AF_INET` specifies the IPv4 communication pro
 
 Next, the `sockaddr_in` IP socket address struct is created which is used in the forthcoming `bind` method. As further explained in `man 7 in`, an IP  socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number.
 
-```
+`
 struct sockaddr_in addr;
 addr.sin_family = AF_INET;
 addr.sin_port = htons(4444);
 addr.sin_addr.s_addr = INADDR_ANY;
-```
+`
 
 `man 7 in` states that `sin_family` is always set to `AF_INET` 
 
