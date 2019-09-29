@@ -46,6 +46,14 @@ In the code above, the `htons` function converts the unsigned short integer `444
 #### Bind TCP Socket to IP Socket Address Structure
 The `bind` method is now used to bind the TCP socket as created by `socket()` to a port and IP address as created in the `addr` structure. From `man bind`, the `bind()` system call takes three arguments; a socket file descriptor (`sockfd`), a pointer to a structure of the type `sockaddr_in` (`addr`), and the size, in bytes (returned by the `sizeof` operator in this example), of the address structure pointed to by the second argument.
 
+#### Listen
+
+#### 
+
+## From C to Shellcode
+
+## Wrapper Program for Port Configuration
+
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
 <http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert>
