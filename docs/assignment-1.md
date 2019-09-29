@@ -42,8 +42,6 @@ Next, the `sockaddr_in` IP socket address struct is created which is used in the
 
 The man page also states that `sin_family` is always set to `AF_INET`, that `sin_port` defines a port number in network byte order (provided through `htons()` in this example), and that `sin_addr` is the host IP address and should be assigned one of the `INADDR_*` values. 
 
-`man 7 ip` states that `sin_family` is always set to `AF_INET` 
-
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
 <http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert>
