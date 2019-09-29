@@ -8,8 +8,10 @@
 
 int main ()
 {
+    // creates a TCP socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     
+    // creates an IP socket address struct
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(4444);
@@ -28,6 +30,7 @@ int main ()
     return 0;
 }
 ```
+
 ## Analysis of Shell_Bind_TCP.c
 First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint.
 
