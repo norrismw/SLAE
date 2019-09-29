@@ -48,7 +48,9 @@ The `bind` method is now used to bind the TCP socket as created by `socket()` to
 
 #### Listen
 
-#### 
+#### Accept
+
+#### Execve
 
 ## From C to Shellcode
 
