@@ -44,7 +44,7 @@ Next, the `addr` IP socket address structure is created which is used in the for
 In the code above, the `htons` function converts the unsigned short integer `4444` from host byte order to network byte order as expected by `sin_port`. The value of `INADDR_ANY` (which correlates to `0.0.0.0` or "any") is given for `sin_addr`.
 
 #### Bind TCP Socket to IP Socket Address Structure
-The `bind` method is now used to bind the TCP socket as created by `socket()` to a port and IP address as created in the `addr` structure. From `man bind`, the `bind()` system call takes three arguments; a socket file descriptor (`sockfd`), a pointer to a structure of the type `sockaddr_in` (`addr`), and the size, in bytes (as determined using the `sizeof()` operator), of the address structure pointed to by the second argument. 
+The `bind` method is now used to bind the TCP socket as created by `socket()` to a port and IP address as created in the `addr` structure. From `man bind`, the `bind()` system call takes three arguments; a socket file descriptor (`sockfd`), a pointer to a structure of the type `sockaddr_in` (`addr`), and the size, in bytes (returned by the `sizeof()` operator in this example), of the address structure pointed to by the second argument.
 
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
