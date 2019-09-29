@@ -29,11 +29,11 @@ int main ()
 }
 ```
 ## Analysis of Shell_Bind_TCP.c
-First, a socket is created using the socket function. As described in man 2 socket, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint.
+First, a socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint.
 
-socket() expects a domain argument, a type argument, and a protocol argument.
+`socket()` expects a domain argument, a type argument, and a protocol argument.
 
-int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+`int sockfd = socket(AF_INET, SOCK_STREAM, 0);`
 
 In this case, the domain argument `AF_INET` specifies the IPv4 communication protocol, the type argument `SOCK_STREAM` specifies the connection-based TCP standard for data exchange, and the protocol argument `0` indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
