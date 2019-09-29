@@ -32,15 +32,13 @@ int main ()
 ```
 
 ## Analysis of Shell_Bind_TCP.c
-First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint.
-
-`socket()` expects a domain argument, a type argument, and a protocol argument.
+First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint. `socket()` expects a domain argument, a type argument, and a protocol argument.
 
 In this case, the domain argument `AF_INET` specifies the IPv4 communication protocol, the type argument `SOCK_STREAM` specifies the connection-based TCP standard for data exchange, and the protocol argument `0` indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
-Next, the `sockaddr_in` IP socket address struct is created which is used in the forthcoming `bind` method. As further explained in `man 7 ip`, an IP  socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number.
+Next, the `sockaddr_in` IP socket address struct is created which is used in the forthcoming `bind` method. As further explained in `man 7 ip`, an IP  socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number. The man page also states that `sin_family` is always set to `AF_INET`, that `sin_port` defines a port number in network byte order, and that `sin_addr` is the host IP address and should be assigned one of the `INADDR_*` values. 
 
-The man page also states that `sin_family` is always set to `AF_INET`, that `sin_port` defines a port number in network byte order (provided through `htons()` in this example), and that `sin_addr` is the host IP address and should be assigned one of the `INADDR_*` values (`INADDR_ANY` a.k.a `0.0.0.0` in this case). 
+In the code above, the `htons` function converts the unsigned short integer `4444` from host byte order to network byte order for `sin_port` and `INADDR_ANY` (which correlates to `0.0.0.0`) is given to `sin_addr`.
 
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
