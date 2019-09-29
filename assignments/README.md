@@ -1,6 +1,4 @@
-## Welcome
----
-This is the repository for my x86 Assembly Language and Shellcoding on Linux course work.
+This is the code repository for my x86 Assembly Language and Shellcoding on Linux course work. The code used for each assignment can be found in its respective directory above.
 
 ### Table of Contents
 
