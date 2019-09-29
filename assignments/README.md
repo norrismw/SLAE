@@ -1,6 +1,6 @@
 This is the code repository for my x86 Assembly Language and Shellcoding on Linux course work.
 
-The table of contents below includes the title of each assignment. The code used used/referenced in each assignment can be found in its respective directory above.
+The table of contents below includes the title of each assignment. The code used/referenced in each assignment can be found in its respective directory above.
 
 ### Table of Contents
 
