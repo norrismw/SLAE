@@ -30,9 +30,9 @@ int main ()
 }
 ```
 
-First, a socket is created using `socket`(). As described in the `man 2 socket` man page, the `socke` function creates  an  endpoint for communication and returns a file descriptor that refers to that endpoint. The function expects a domain argument, a type argument, and a protocol argument.
+First, a socket is created using `socket()`. As described in the `man 2 socket` man page, the `socket` function creates  an  endpoint for communication and returns a file descriptor that refers to that endpoint. The function expects a domain argument, a type argument, and a protocol argument.
 
->int socket(int domain, int type, int protocol);
+>int `socket`(int `domain`, int `type`, int `protocol`);
 
 In this case, the domain argument AF_INET specifies the IPv4 communication protocol, the type argument SOCK_STREAM specifies the connection-based TCP standard for data exchange, and the protocol argument 0 indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
