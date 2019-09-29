@@ -32,18 +32,18 @@ int main ()
 ```
 
 ## Analysis of Shell_Bind_TCP.c
-### Create a TCP Socket
+#### Create a TCP Socket
 First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint. `socket()` expects a domain argument, a type argument, and a protocol argument.
 
 In this case, the domain argument `AF_INET` specifies the IPv4 communication protocol, the type argument `SOCK_STREAM` specifies the connection-based TCP standard for data exchange, and the protocol argument `0` indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
-### Create an IP Socket Address Structure
+#### Create an IP Socket Address Structure
 Next, the `addr` IP socket address structure is created which is used in the forthcoming `bind` method. As further explained in `man 7 ip`, an IP socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number. The man page also states that `sin_family` is always set to `AF_INET`, that `sin_port` defines a port number in network byte order, and that `sin_addr` is the host IP address and should be assigned one of the `INADDR_*` values. 
 
 In the code above, the `htons` function converts the unsigned short integer `4444` from host byte order to network byte order as expected by `sin_port`. The value of `INADDR_ANY` (which correlates to `0.0.0.0` or "any") is given for `sin_addr`.
 
-### Bind TCP Socket to IP Socket Address Structure
-With the `addr`structure defined, the `bind` method can be utilized to bind the TCP socket as created by `socket()` to a port and IP address as created in the `addr` structure. From `man bind` the `bind()` system call
+#### Bind TCP Socket to IP Socket Address Structure
+With the `addr`structure defined, the `bind` method can be utilized to bind the TCP socket as created by `socket()` to a port and IP address as created in the `addr` structure. From `man bind`, the `bind()` system call takes three arguments; a socket file descriptor (`sockfd`), a pointer to a structure of the type `sockaddr_in` (`addr`), and the size, in bytes, of the address structure pointed to by the second argument.
 
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
