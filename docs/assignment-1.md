@@ -34,7 +34,7 @@ First, a socket is created using `socket()`. As described in `man 2 socket`, the
 
 The function expects a domain argument, a type argument, and a protocol argument.
 
->int socket(int domain, int type, int protocol);
+`int sockfd = socket(AF_INET, SOCK_STREAM, 0);`
 
 In this case, the domain argument AF_INET specifies the IPv4 communication protocol, the type argument SOCK_STREAM specifies the connection-based TCP standard for data exchange, and the protocol argument 0 indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
