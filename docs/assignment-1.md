@@ -37,6 +37,13 @@ First, a TCP socket is created using the `socket` function. As described in `man
 
 In this case, the domain argument `AF_INET` specifies the IPv4 communication protocol, the type argument `SOCK_STREAM` specifies the connection-based TCP standard for data exchange, and the protocol argument `0` indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
+Next, the `sockaddr_in` IP socket address struct is created which is used in the forthcoming `bind` method. 
+
+From `man 7 in` man page: 
+> an IP  socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number.
+
+asdf
+
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
 <http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert>
