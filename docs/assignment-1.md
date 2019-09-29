@@ -8,15 +8,16 @@
 
 int main ()
 {
-    // creates a TCP socket
+    // Create a TCP Socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     
-    // creates an IP socket address structure
+    // Create an IP Socket Address Structure
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(4444);
     addr.sin_addr.s_addr = INADDR_ANY;
 
+    // Bind TCP Socket to IP Socket Address Structure
     bind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
     listen(sockfd, 0);
 
