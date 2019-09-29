@@ -33,18 +33,20 @@ First, a TCP socket is created using the `socket` function. As described in `man
 
 `socket()` expects a domain argument, a type argument, and a protocol argument.
 
-`int sockfd = socket(AF_INET, SOCK_STREAM, 0);`
+```c
+int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+```
 
 In this case, the domain argument `AF_INET` specifies the IPv4 communication protocol, the type argument `SOCK_STREAM` specifies the connection-based TCP standard for data exchange, and the protocol argument `0` indicates that the system should select the default protocol number based on the previously specified domain and protocol arguments.
 
 Next, the `sockaddr_in` IP socket address struct is created which is used in the forthcoming `bind` method. As further explained in `man 7 in`, an IP  socket address is defined as a combination of an IP interface address and a 16-bit (2 byte) port number.
 
-`
+```c
 struct sockaddr_in addr;
 addr.sin_family = AF_INET;
 addr.sin_port = htons(4444);
 addr.sin_addr.s_addr = INADDR_ANY;
-`
+```
 
 `man 7 in` states that `sin_family` is always set to `AF_INET` 
 
