@@ -29,7 +29,7 @@ int main ()
 }
 ```
 ## Analysis of Shell_Bind_TCP.c
-First, a socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint.
+First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint.
 
 `socket()` expects a domain argument, a type argument, and a protocol argument.
 
