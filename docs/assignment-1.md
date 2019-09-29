@@ -30,9 +30,9 @@ int main ()
 }
 ```
 
-First, a socket is created using the `socket` function. As described in `man 2 socket`, the `socket` function creates an endpoint for communication and returns a file descriptor that refers to that endpoint. 
+First, a socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint. 
 
-The function expects a domain argument, a type argument, and a protocol argument.
+`socket()` expects a domain argument, a type argument, and a protocol argument.
 
 `int sockfd = socket(AF_INET, SOCK_STREAM, 0);`
 
