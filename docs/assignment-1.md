@@ -15,7 +15,7 @@ After analysis of the C program is complete, the code can more easily be re-writ
 Finally, the third section of this paper demonstrates a program written in Python that allows a user to configure a port number to be used in the Shell_Bind_TCP shellcode.
 
 ## Analysis of Shell_Bind_TCP.c
-The following has been commented in such a way that breaks the program down into distinct sections which will be referenced during analysis. A brief explanation of each commented code section will be provided in this section of the post.
+The following code has been commented in a way that aims to break the program down into distinct sections to be referenced during analysis. A brief explanation of each commented code section will be provided in this section of the post.
 
 ```c
 #include <stdio.h>
