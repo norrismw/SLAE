@@ -49,7 +49,7 @@ int main ()
 }
 ```
 
-As commented in the code, the program can be broken down into distinct sections for the purpose of analysis. A brief explanation of each section are provided below. Following analysis of the C program, the program will be rewritten using assembly. Finally, a wrapper program written in Python 
+As commented in the code, the program can be broken down into distinct sections for the purpose of analysis. A brief explanation of each commented code section is provided in the following section. Following the analysis of the C program, the program will be rewritten using assembly. Finally, a wrapper program written in Python is included that allows the configuration of a port number.   
 
 ## Analysis of Shell_Bind_TCP.c
 #### Create a TCP Socket
