@@ -39,6 +39,7 @@ int main ()
 
 ## Analysis of Shell_Bind_TCP.c
 #### Create a TCP Socket with socket()
+---
 `int socket(int domain, int type, int protocol);`
 ---
 First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint. `socket()` expects a domain argument, a type argument, and a protocol argument.
@@ -51,6 +52,7 @@ Next, the `addr` IP socket address structure is created which is used in the for
 In the code above, the `htons` function converts the unsigned short integer `4444` from host byte order to network byte order as expected by `sin_port`. The value of `INADDR_ANY` (which correlates to `0.0.0.0` or "any") is given for `sin_addr`.
 
 #### Bind TCP Socket to IP Socket Address Structure with bind()
+---
 `int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);`
 ---
 The `bind` method is now used to bind the TCP socket as created by `socket()` to the port and IP address initialized within the `addr` structure. From `man bind`, the `bind()` system call takes three arguments; a socket file descriptor (`sockfd`), a pointer to a structure of the type `sockaddr_in` (`addr`), and the size, in bytes (returned by the `sizeof` operator in this example), of the address structure pointed to by the second argument.
@@ -61,12 +63,15 @@ The `bind` method is now used to bind the TCP socket as created by `socket()` to
 As the socket is now bound to an IP address and a port, the `listen` function is used to designate the socket as one which will be used to accept incoming connection requests through the `accept` function. As described in, `man 2 listen` the function expects two arguments. The first argument is a socket file descriptor (once again, the socket defined as `sockfd`), and the second argument identifies how many pending connections should be queued.
 
 #### Accept Connection Requests with accept()
+---
 `int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);`
 ---
 #### Direct Output with dup2()
+---
 `int dup2(int oldfd, int newfd);`
 ---
 #### Execute Program with execve()
+---
 `int execve(const char *pathname, char *const argv[], char *const envp[]);`
 ---
 ## From C to Shellcode
