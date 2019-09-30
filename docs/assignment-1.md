@@ -12,10 +12,10 @@ To more fully understand the underlying system calls required to create a TCP bi
 
 After analysis of the C program is complete, the code can more easily be re-written in assembly. This processes is documented and explained in detail in the second section of this post. 
 
-Finally, the third section of this paper demonstrates a program written in Python that allows a user to configure a port number to be used in Shell_Bind_TCP shellcode.
+Finally, the third section of this paper demonstrates a program written in Python that allows a user to configure a port number to be used in the Shell_Bind_TCP shellcode.
 
 ## Analysis of Shell_Bind_TCP.c
-The code below has been commented in such a way that breaks the program down into distinct sections which will be referenced during analysis. A brief explanation of each commented code section will be provided.
+The following has been commented in such a way that breaks the program down into distinct sections which will be referenced during analysis. A brief explanation of each commented code section will be provided in this section of the post.
 
 ```c
 #include <stdio.h>
