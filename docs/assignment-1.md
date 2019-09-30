@@ -10,7 +10,9 @@ A bind shell is a type of shell in which the system on which the code is run bin
 
 To more fully understand the underlying system calls required to create a TCP bind shell written in assembly, it is logical to begin by analyzing a TCP bind shell written using a higher level language such as C. For this purpose, the C program shown in the proceeding (first) section of this document will instruct a system to listen on all available network interfaces for connections on TCP port 4444. When a connection is established, `/bin/sh` will be executed on the system and input and output will be redirected to the system that established the TCP connection. 
 
-After analysis of the C program is complete, the code can more easily be re-written in assmebly. This processes is documented and explained in the second section of this post. Finally, a wrapper program written in Python is included and explained in section three that allows the configuration of a port number.   
+After analysis of the C program is complete, the code can more easily be re-written in assembly. This processes is documented and explained in detail in the second section of this post. 
+
+Finally, the third section of this paper demonstrates a program written in Python that allows a user to configure a port number to be used in Shell_Bind_TCP shellcode.
 
 ## Analysis of Shell_Bind_TCP.c
 The code above has been commented in such a way that breaks the program down into distinct sections which will be used for the purpose of analysis. A brief explanation of each commented code section is provided below.
