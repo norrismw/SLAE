@@ -6,10 +6,14 @@ Create a Shell_Bind_TCP shellcode that;
 2. Executes a shell on an incoming connection
 
 ## Introduction
+A bind shell is a type of shell in which the system on which the code is run binds a TCP socket that is designated to listen for incoming connections to a specified port and IP address. When a bind shell is used, the system on which the bind shell is executed acts as the listener. 
 
-A bind shell is a type of shell in which the system on which the code is run binds a TCP socket that is designated to listen for incoming connections to a specified port and IP address. When a bind shell is used, the system on which the bind shell is executed acts as the listener. To more fully understand the underlying system calls required to create a TCP bind shell written in assembly, it is logical to begin by analyzing a TCP bind shell written using a higher level language such as C. 
+To more fully understand the underlying system calls required to create a TCP bind shell written in assembly, it is logical to begin by analyzing a TCP bind shell written using a higher level language such as C. For this purpose, the C program shown in the proceeding (first) section of this document will instruct a system to listen on all available network interfaces for connections on TCP port 4444. When a connection is established, `/bin/sh` will be executed on the system and input and output will be redirected to the system that established the TCP connection. 
 
-For this purpose, the C program shown below includes code that will instruct a system to listen on all available network interfaces for connections on TCP port 4444. When a connection is established, `/bin/sh` will be executed on the system and input and output will be redirected to the system that established the TCP connection. 
+After analysis of the C program is complete, the code can more easily be re-written in assmebly. This processes is documented and explained in the second section of this post. Finally, a wrapper program written in Python is included and explained in section three that allows the configuration of a port number.   
+
+## Analysis of Shell_Bind_TCP.c
+The code above has been commented in such a way that breaks the program down into distinct sections which will be used for the purpose of analysis. A brief explanation of each commented code section is provided below.
 
 ```c
 #include <stdio.h>
@@ -49,9 +53,6 @@ int main ()
 }
 ```
 
-As commented in the code, the program can be broken down into distinct sections for the purpose of analysis. A brief explanation of each commented code section is provided in the following section. Following the analysis of the C program, the program will be rewritten using assembly. Finally, a wrapper program written in Python is included that allows the configuration of a port number.   
-
-## Analysis of Shell_Bind_TCP.c
 #### Create a TCP Socket
 >`int socket(int domain, int type, int protocol);`
 
