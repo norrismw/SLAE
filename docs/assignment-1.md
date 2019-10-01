@@ -85,7 +85,7 @@ The `accept` function is used to extract the first connection request in the que
 #### Direct Connection Socket Output
 >`int dup2(int oldfd, int newfd);`
 
-Next, a `for` loop is used to iterate over the `dup2` function three times, passing the values of `i = 0`, `i = 1`, and `i = 2` as the second argument expected by `dup2` during each respective iteration. The purpose of this is to redirect `STDIN` (integer file descriptor `0`), `STDOUT` (integer file descriptor `1`), and `STDERROR` (integer file descriptor `2`) to the connected socket file descriptor `connfd` which is passed as the first argument to `dup2` for each `for` loop iteration.
+Next, a `for` loop is used to iterate over the `dup2` function three times, passing the values of `i = 0`, `i = 1`, and `i = 2` as the second argument expected by `dup2` during each respective iteration. The purpose of this is to direct the connected socket file descriptor `connfd` which is passed as the first argument to `dup2` for each `for` loop iteration to `STDIN` (integer file descriptor `0`), `STDOUT` (integer file descriptor `1`), and `STDERROR` (integer file descriptor `2`).
 
 #### Execute Program
 >`int execve(const char *pathname, char *const argv[], char *const envp[]);`
