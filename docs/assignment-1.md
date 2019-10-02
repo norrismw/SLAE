@@ -125,10 +125,10 @@ In Linux x86 assembly, system calls are made through the software interrupt `int
 #### Clear Registers
 ```nasm
 ; clear registers
-xor eax, eax
-xor ebx, ebx
+xor edx, edx
 xor ecx, ecx
 xor edx, edx
+xor eax, eax
 ```
 
 #### Socketcall Explained
