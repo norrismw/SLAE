@@ -127,7 +127,7 @@ In Linux x86 assembly, system calls are made through the software interrupt `int
 ; clear registers
 xor edx, edx
 xor ecx, ecx
-xor edx, edx
+xor ebx, ebx
 xor eax, eax
 ```
 
