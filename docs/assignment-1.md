@@ -198,7 +198,7 @@ Call to `bind`
 ; bind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
 push 0x10           ; sizeof(addr) = 16
 push ecx            ; (struct sockaddr *)&addr
-push esi            ; int sockfd
+push esi            ; sockfd
 ; int socketcall(int call, unsigned long *args);
 mov al, 0x66        ; socketcall
 inc bl              ; socketcall call sys_bind = 2
@@ -214,7 +214,7 @@ Call to `listen`
 ; int listen(int sockfd, int backlog);
 ; listen(sockfd, 0);
 push edx            ; 0
-push esi            ; int sockfd
+push esi            ; sockfd
 ; int socketcall(int call, unsigned long *args);
 mov al, 0x66        ; socketcall
 mov bl, 0x4         ; socketcall call sys_listen = 4
