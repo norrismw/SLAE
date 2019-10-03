@@ -258,7 +258,7 @@ int 0x80            ; returns int connfd in eax
 Next, a system call to to `dup2` is required which is assigned the system call number decimal `63` in the `unistd_32.h` file.
 
 ```
-#define __NR_dup2 63`
+#define __NR_dup2 63
 ```
 
 ```nasm
@@ -283,7 +283,7 @@ int 0x80
 Finally, a system call to `execve` needs to be made in order to execute `/bin/sh`. From `unistd_32.h` the system call number for `execve` is decimal `11`.
 
 ```
-#define __NR_execve 11`
+#define __NR_execve 11
 ```
 
 ```nasm
