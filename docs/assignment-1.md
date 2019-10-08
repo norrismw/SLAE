@@ -56,7 +56,7 @@ int main ()
 ```
 
 #### Create a TCP Socket
->`int socket(int domain, int type, int protocol);`
+`int socket(int domain, int type, int protocol);`
 
 First, a TCP socket is created using the `socket` function. As described in `man 2 socket`, the function creates an endpoint for communication and returns a file descriptor that refers to that endpoint. `socket` expects a domain argument, a type argument, and a protocol argument.
 
@@ -87,27 +87,27 @@ struct sockaddr_in {
 ```
 
 #### Bind TCP Socket to IP Socket Address Structure
->`int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);`
+`int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);`
 
 The `bind` method is now used to bind the TCP socket as created by `socket` to the port and IP address initialized within the `addr` structure. From `man bind`, the `bind()` system call takes three arguments; a socket file descriptor (the previously defined `sockfd`), a pointer to a structure of the type `sockaddr_in` (the previously defined `addr`), and the size, in bytes (returned by the `sizeof` operator in this example), of the address structure pointed to by the second argument.
 
 #### Designate Socket to Listen for Connection Requests
->`int listen(int sockfd, int backlog);`
+`int listen(int sockfd, int backlog);`
 
 As the socket is now bound to an IP address and a port, the `listen` function is used to designate the socket as one which will be used to accept incoming connection requests through the `accept` function. As described in, `man 2 listen` the function expects two arguments. The first argument is a socket file descriptor (once again, the socket previously defined as `sockfd`), and the second argument identifies how many pending connections should be queued.
 
 #### Accept Connection Requests on the Socket
->`int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);`
+`int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);`
 
 The `accept` function is used to extract the first connection request in the queue of pending connections on a listening socket as defined previously using the `listen` function. Then, `accept` creates a new and distinct connected socket  and returns a new file descriptor (`connfd` in this example) that refers to this newly-created socket. The function first expects a socket file descriptor arugument, then an address argument that points to a `sockaddr` structure, and finally an address length argument. For the purpose of this program, the only necessary argument is the first argument which will be passed the socket file descriptor `sockfd` as created previously by `socket()`.
 
 #### Direct Connection Socket Output
->`int dup2(int oldfd, int newfd);`
+`int dup2(int oldfd, int newfd);`
 
 Next, a `for` loop is used to iterate over the `dup2` function three times, passing the values of `i = 0`, `i = 1`, and `i = 2` as the second argument expected by `dup2` during each respective iteration. The purpose of this is to direct the connected socket file descriptor `connfd` which is passed as the first argument to `dup2` for each `for` loop iteration to `STDIN` (integer file descriptor `0`), `STDOUT` (integer file descriptor `1`), and `STDERROR` (integer file descriptor `2`).
 
 #### Execute Program
->`int execve(const char *pathname, char *const argv[], char *const envp[]);`
+`int execve(const char *pathname, char *const argv[], char *const envp[]);`
 
 Finally, the `execve` function is called. The `execve` function executes the program pointed to by the first argument, `filename`. The second argument, `argv`, is a pointer to an array of argument strings that should be passed to `filename`. The final argument expected by `execve` is a pointer to an array of strings that are passed as environment to the newly-executed `filename` program. The `argv` and `envp` arguments must include a NULL pointer at the end of the array. Additionally, `argv[0]` should contain the filename assosicated with the program being executed (i.e. `filename`). In the analyzed program, the `/bin/sh` file will be executed with no additional arguments or environments being passed.
 
