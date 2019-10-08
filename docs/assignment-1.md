@@ -138,7 +138,7 @@ The first bit of assembly code serves the purpose of clearing the registers. Thi
 #### Socketcall System Call Explained
 Conveniently, the first four functions from the list above are all accessible via the `socketcall` system call.  As detailed in `man socketcall`, the function expects two arguments. 
 
-```
+```shell
 #include <linux/net.h>
 int socketcall(int call, unsigned long *args);  
 ```
@@ -274,7 +274,7 @@ The memory address in `ESP` is stored in `ECX` which will eventually be passed t
 #### Dup2 System Call
 Now that the four `socketcall` system calls are complete, a system call to to `dup2` is required which is assigned the system call number decimal `63` in the `unistd_32.h` file.
 
-```
+```shell
 #define __NR_dup2 63
 ```
 
@@ -305,7 +305,7 @@ This general process is repeated two more times passing the values of `1` and `2
 #### Execve System Call
 The final step is a system call to `execve` in order to execute `/bin/sh`. From `unistd_32.h` the system call number for `execve` is decimal `11`.
 
-```
+```shell
 #define __NR_execve 11
 ```
 
