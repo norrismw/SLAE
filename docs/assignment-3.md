@@ -39,13 +39,13 @@ If the pointer to the pathname given as argument one points to an area of inacce
 EFAULT pathname points outside your accessible address space.
 ```
 
-This is crucial to the egg hunter shellcode, as the return value of the `access` systemcall can be examined upon completion to determine whether the egg could possibly be located in the page of memory that includes the specified pointer address. If the `access` system call returns `EFAULT`, then the egg and the subsequent reverse shell shellcode is not located in the page of memory. When `EFAULT` is returned, `access` is used again to validate a memory address in the next page of memory.
+This is crucial to the egg hunter shellcode, as the return value of the `access` systemcall can be examined upon completion to determine whether the egg could possibly be located in the page of memory that includes the specified pointer address. If the `access` system call returns `EFAULT`, then the egg and the subsequent shellcode is not located in the page of memory. When `EFAULT` is returned, `access` is used again to validate a memory address in the next page of memory.
 
-As the egg hunter shellcode does its work, `access` attempts to access a valid memory page which is determined by the absense of the `EFAULT` value returned in `EAX`. When a valid memory page is found, the shellcode continues by first increasing the memory address by one, and then by comparing the egg value specfied within the egg hunter shellcode to the egg value prepended to the target reverse shell shellcode. That is to say, once a valid memory address is found, the value of the valid memory address is increased by one until either the entire range of memory within the page has been searched without the 8 byte egg being found, or until the 8 byte egg value is found as prepended to the reverse shell shellcode. If the egg is found within the page, the egg hunter shellcode jumps to the reverse shell shellcode. Otherwise, the process of locating another valid memory address (on a different page of memory) through the `access` system call is repeated.
+As the egg hunter shellcode does its work, `access` attempts to access a valid memory page which is determined by the absense of the `EFAULT` value returned in `EAX`. When a valid memory page is found, the shellcode continues by first increasing the memory address by one, and then by comparing the egg value specfied within the egg hunter shellcode to the egg value prepended to the target shellcode. That is to say, once a valid memory address is found, the value of the valid memory address is increased by one until either the entire range of memory within the page has been searched without the 8 byte egg being found, or until the 8 byte egg value is found as prepended to the shellcode. If the egg is found within the page, the egg hunter shellcode jumps to the shellcode. Otherwise, the process of locating another valid memory address (on a different page of memory) through the `access` system call is repeated.
 
 The comparision functionality of the egg hunter shellcode is provided by the string comparison instruction `SCASD`. The `SCASD` instruction compares the value in `EAX` (which will be the first 4 bytes of the egg) to the doubleword at `EDI`. In this egg hunter shellcode, a valid memory address as determined by `access` as outlined above will be the target for comparison and will be stored in `EDI` for this purpose. Additionaly, `SCASD` increases the value stored in `EDI` by 4 upon completion and sets status flags which can be used to determine the outcome of the comparison.
 
-Through the general processes explained above, the egg will eventually be found in memory and the reverse shell shellcode immediately following the egg will be executed.
+Through the general processes explained above, the egg will eventually be found in memory and the shellcode immediately following the egg will be executed.
 
 ## Egg Hunter Shellcode: Analysis
 The egg hunter shellcode will be explained below. The assembly code will come first, followed by an explanation of the instructions.
@@ -65,7 +65,7 @@ inc_address:
 inc edx             ; increases EDX by one; e.g. 0x1000, 0x2000, 0x2001
 ```
 
-The instructions above are referenced by two labels. First, the `align_page` label is followed by the `OR DX, 0XFFF` instruction. This results in the `DX` register being set to `fff` which is equal to `4095` in decimal, or `PAGE_SIZE-1`. Since `PAGE_SIZE` is the smallest unit of data for memory management in virtual address space, it can be assumed that the egg and the subsequent reverse shell shellcode will exist in one memory page. The instruction following the `inc_address` label increases `EDX` by one. This label is used multiple times within the complete shellcode and has dual functionality in the sense that it "turns" the page if the address referenced through `access` is invalid as well as shifts the `SCASD` comparison window by 1 byte when a valid memory page is found.
+The instructions above are referenced by two labels. First, the `align_page` label is followed by the `OR DX, 0XFFF` instruction. This results in the `DX` register being set to `fff` which is equal to `4095` in decimal, or `PAGE_SIZE-1`. Since `PAGE_SIZE` is the smallest unit of data for memory management in virtual address space, it can be assumed that the egg and the subsequent shellcode will exist in one memory page. The instruction following the `inc_address` label increases `EDX` by one. This label is used multiple times within the complete shellcode and has dual functionality in the sense that it "turns" the page if the address referenced through `access` is invalid as well as shifts the `SCASD` comparison window by 1 byte when a valid memory page is found.
 
 ```nasm
 ; preparation for SYS_access
@@ -115,9 +115,9 @@ Once `SCASD` returns true, (i.e. once the `ZF` flag is set due to the contents a
 jmp edi
 ```
 
-Finally, after the egg is found, the `JMP` instruction is used to redirect execution to the shellcode. Note that the second `SCASD` instruction will result in the memory address that was initially stored in `EDI` to be `EDI+8`. This means that the `JMP EDI` instruction will result in execution continuing beyond the 8 byte egg at the first byte of the reverse shell shellcode!
+Finally, after the egg is found, the `JMP` instruction is used to redirect execution to the shellcode. Note that the second `SCASD` instruction will result in the memory address that was initially stored in `EDI` to be `EDI+8`. This means that the `JMP EDI` instruction will result in execution continuing beyond the 8 byte egg at the first byte of the shellcode!
 
-## Egg Hunter Shellcode: Full Code
+## Full Code
 
 ```nasm
 ; egghunter.nasm
