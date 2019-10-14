@@ -16,7 +16,7 @@ As part of the reverse shell shellcode written to memory via the `eggshell` argu
 
 Using the 50 bytes of buffer space remaining after program control has been obtained via the stack buffer overlow vulnerability caused by the `eggshell` argument, an "Egg Hunter" shellcode would injected and excuted. The egg hunter shellcode would search virtual address space for the unique egg value. Once the the location of the egg is found, a `JMP` instruction can be used to execute the reverse shell shellcode following the egg.
 
-There is a wealth of information available on the subject, and as such, the demo explained below is based primarily off of the work of Matt Miller. Particularly, the majority of the shellcode outlined below is described in his paper, _Safely Searching Process Virtual Address Space_ which can be found here [[[LINK TO http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf]]]. The egg hunter shellcode analysis by FuzzySecurity was also a valuable source of information regarding egg hunter techniques, however the analysis is focused heavily on Windows rather than on Linux. The egg hunter shellcode explanation and analysis from FuzzySecurity can be found here [[[LINK TO https://www.fuzzysecurity.com/tutorials/expDev/4.html]]].
+There is a wealth of information available on the subject, and as such, the demo explained below is based primarily off of the work of Matt Miller. Particularly, the majority of the shellcode outlined below is described in his paper, _Safely Searching Process Virtual Address Space_, which can be found here [[[LINK TO http://www.hick.org/code/skape/papers/egghunt-shellcode.pdf]]]. The egg hunter shellcode analysis by FuzzySecurity was also a valuable source of information regarding egg hunter techniques, however the analysis is focused heavily on Windows rather than on Linux. The egg hunter shellcode explanation and analysis from FuzzySecurity can be found here [[[LINK TO https://www.fuzzysecurity.com/tutorials/expDev/4.html]]].
 
 The rest of this post will aim to explain, analyze, and demonstrate an egg hunter shellcode inspired by the work of Matt Miller.
 
@@ -48,17 +48,24 @@ The comparision functionality of the egg hunter shellcode is provided by the str
 Through the general processes explained above, the egg will eventually be found in memory and the reverse shell shellcode immediately following the egg will be executed.
 
 ## Egg Hunter Shellcode: Analysis
+The egg hunter shellcode will be explained below. The assembly code will come first, followed by an explanation of the instructions.
+
 ```nasm
 xor edx, edx        ; clear EDX
 ```
 
+First, the `EDX` register is cleared using the `XOR` instruction. The `XOR` instruction has been explained in a previous post. In general terms, when the `XOR` instruction specifies the same register for both target and destination, the register will be cleared.
+
 ```nasm
+;sets EDX to PAGE_SIZE-1
 align_page:
-or dx, 0xfff        ; sets EDX to FFF; e.g. 0x00000fff, 0x00001fff
+or dx, 0xfff        ; sets EDX to fff; e.g. 0x0fff, 0x1fff
 
 inc_address:
-inc edx             ; increases EDX by one; e.g. 0x0001000, 0x0002000
+inc edx             ; increases EDX by one; e.g. 0x1000, 0x2000, 0x2001
 ```
+
+The instructions above are referenced by two labels. First, the `align_page` label is followed by the `OR DX, 0XFFF` instruction. This results in the `DX` register being set to `fff` which is equal to `4095` in decimal, or `PAGE_SIZE-1`. Since `PAGE_SIZE` is the smallest unit of data for memory management in virtual address space, it can be assumed that the egg and the subsequent reverse shell shellcode will exist in one memory page. The instruction following the `inc_address` label increases `EDX` by one. This label is used multiple times within the complete shellcode and has dual functionality in the sense that it "turns" the page if the address referenced through `access` is invalid as well as shifts the `SCASD` comparison window by 1 byte when a valid memory page is found.
 
 ```nasm
 ; preparation for SYS_access
@@ -69,11 +76,15 @@ pop eax             ; 0x21
 int 0x80            ; software interrupt; returns 0xfffffff2 on EFAULT
 ```
 
+Now, the registers are set for the `access` system call. Once the memory page has been aligned, its value is stored in `EDX`. Therefore, the value of `EDX+0x4` is passed as the first argument to `access` through `EBX` with the intention of testing whether the page is a valid range in virtual address space. Next, the system call number for `access` in hexadecimal is pushed to the stack, and immediately removed from the stack and stored in the `EAX` register which specifes the `access` system call to the following software interrupt `INT 0x80`. If the memory address specified in `EBX` is invalid, the `EFAULT` error value is returned in `EAX`.
+
 ```nasm
 ; compare return value of SYS_access to find writable page
 cmp al, 0xf2        ; sets ZF when comparison is true
 jz align_page       ; jumps to align_page when ZF is set
 ```
+
+As the return value of `access` is currently in `EAX`, the `CMP` instruction is used to determine whether the checked memory address accessed by `access` is invalid. The `CMP` instruction is used to compare the low-byte value in `AL` to `0xf2` which is the low-byte value for the `EFAULT` error return code. If the value in `AL` is equal to `0xf2`, the comparison returns true and the zero flag `ZF` is set. The `JZ` instruction checks `ZF` and if `ZF` is set, `JZ` jumps to the `align_page` label which in turn increases the memory page (and thus the memory address checked by `access`), resets the registers for `access`, calls the `access` system call, and checks the result once again. This loop will continue until the return value of `access` is not `EFAULT`. 
 
 ```nasm
 ; prepares for egg hunt
@@ -81,11 +92,15 @@ mov eax, 0x50905090 ; 4-byte egghunter key
 mov edi, edx        ; EDX contains memory address of writable page
 ```
 
+Once a valid memory address has been located by `access`, the value of the first four bytes of the egg are moved into `EAX`. In this case, the egg is the 8 byte value `\x90\x50\x90\x50\x90\x50\x90\x50`. It is important to note that the first four bytes are identical to the last four bytes. Next, the value in `EDX` is moved to `EDI` which will later be used by `SCASD` for string comparison purposes. The value in `EDX` (and now `EDI`) is the memory address of the first byte within a valid memory page.
+
 ```nasm
 ; hunts for first 4 bytes of egg; scasd sets ZF when match is true
 scasd               ; compares [EDI] to value in EAX; increments EDI by 4 
 jnz inc_address     ; jumps to inc_address when ZF is not set
 ```
+
+At this point, `SCASD` is used to compare the contents stored at the memory address referenced in `EDI` (which on the first iteration of the loop would be the first 4 bytes a valid memory page) to the value in `EAX` which is the first four bytes of the egg. If `SCASD` returns true (if the contents at `EDI` match the value in `EAX`), the zero flag `ZF` is set. `SCASD` then increments the value in `EDI` by 4. If the `ZF` is not set, (if `SCASD` returns false), `JNZ` jumps to the `inc_address` label, which will utlimately result in the address used for comparison by `SCASD` in `EDI` to be one memory address higher than the previous iteration. Note that the `access` system call happens each time the `JNZ` condition is met. This allows the loop to continue for all memory addresses in a valid page. Once the memory address is increased to an invalid page, the `access` function will once again return `EFAULT` and the `align_page` loop will be repeated until a new, valid memory page is located.
 
 ```nasm
 ; hunts for last 4 bytes of egg
@@ -93,10 +108,14 @@ scasd               ; hunts for last 4 bytes of egg
 jnz inc_address
 ```
 
+Once `SCASD` returns true, (i.e. once the `ZF` flag is set due to the contents at the memory address in `EDI` matches `0x50905090`), the next `SCASD` string comparison occurs in a similar fashion as described previously. This time, since `SCASD` increases `EDI` by 4 upon completion, the contents at `EDI+0x4` are compared to the value in `EAX`. If the contents match, the 8 byte egg has been found. If the contents don't match, egg hunt continues. 
+
 ```nasm
 ; jumps to beginning of shellcode
 jmp edi
 ```
+
+Finally, after the egg is found, the `JMP` instruction is used to redirect execution to the shellcode. Note that the second `SCASD` instruction will result in the memory address that was initially stored in `EDI` to be `EDI+8`. This means that the `JMP EDI` instruction will result in execution continuing beyond the 8 byte egg at the first byte of the reverse shell shellcode!
 
 ## Egg Hunter Shellcode: Full Code
 
@@ -112,10 +131,11 @@ _start:
     xor edx, edx        ; clear EDX
 
 align_page:
-    or dx, 0xfff        ; sets EDX to FFF; e.g. 0x00000fff, 0x00001fff
+    ;sets EDX to PAGE_SIZE-1
+    or dx, 0xfff        ; sets EDX to fff; e.g. 0x0fff, 0x1fff
 
 inc_address:
-    inc edx             ; increases EDX by one; e.g. 0x0001000, 0x0002000
+    inc edx             ; increases EDX by one; e.g. 0x1000, 0x2000, 0x2001
 
     ; preparation for SYS_access
     ; int access(const char *pathname, int mode);
