@@ -11,18 +11,18 @@ decoder:
 	pop esi
 
 x_decode:
-    cmp byte [esi], 0x46
-    jz n_decode
+    	cmp byte [esi], 0x46
+  	jz n_decode
 	xor byte [esi], 0x10
 	inc esi
 	jmp short x_decode
 
 n_decode:
-    cmp byte [esi], 0x13
-    jz shellcode+0x1
-    not byte [esi]
-    dec esi
-    jmp short n_decode
+    	cmp byte [esi], 0x13
+    	jz shellcode+0x1
+    	not byte [esi]
+    	dec esi
+    	jmp short n_decode
 
 call_decoder:
 	call decoder
