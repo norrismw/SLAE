@@ -45,7 +45,7 @@ xor_byte = find_unused_byte(n_encoded)
 nx_encoded = x_encode(n_encoded)
 
 delimiter = find_unused_byte(nx_encoded)
-nx_encoded.append(xor_delimiter)
+nx_encoded.append(delimiter)
 
 formatted_shellcode = format_shellcode(nx_encoded)
 
