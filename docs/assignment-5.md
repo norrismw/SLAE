@@ -1,4 +1,4 @@
-## Assignment 0x05: Metasploit Shellcode Analysis
+## Assignment 0x05: msfvenom Shellcode Analysis
 ---
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
