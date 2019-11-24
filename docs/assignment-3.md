@@ -221,7 +221,7 @@ Upon confirmation, the shellcode can be extracted using the bash one-line comman
 #### Demonstrating the Egg Hunter
 As demonstrated in previous posts, the `sc_test.c` program can be used to test the `egghunter` shellcode. As the Egg Hunter technique is a type of staged payload, the `egghunter` portion cannot be tested without a complementary shellcode that is prepended by the 8-byte egg as explained earlier in this post. With that being said, the `shell_reverse_tcp` reverse shell shellcode from the "Create A Shell_Reverse_TCP Shellcode" paper will be used for this purpose. Additionally, `sc_test.c` has been modified to print the length of the `egghunter` shellcode as well as the length of `shell_reverse_tcp` shellcode prepended with the 8-byte egg.
 
-To test the `egghunter` shellcode with a different payload, simply replace the payload contents below the `/* Current payload: */` comment with the desired shellcode payload.
+To test the `egghunter` shellcode with a different payload, simply replace the payload contents below the `/* Current payload: */` comment with the desired shellcode payload. The source code for this file can be found on [GitHub](https://github.com/norrismw/SLAE).
 
 ```c
 #include <stdio.h>
