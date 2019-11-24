@@ -100,7 +100,7 @@ hs/nib/
 The memory address of `ESP` is moved into the `EBX` register which will be passed to `execve` as the first argument which is a pointer to the pathname of the program to be executed, `/bin/sh`.
 
 ```nasm
-00000017  52                push edx                                  
+00000017  52                push edx
 00000018  E803000000        call 0x20
 ```
 
