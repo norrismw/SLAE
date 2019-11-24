@@ -1,6 +1,6 @@
 ## Welcome
 ---
-This is the home page for my x86 Assembly Language and Shellcoding on Linux course work. Use the links below to navigate to the whichever post you're interested in.
+This is the home page for my x86 Assembly Language and Shellcoding on Linux course work. Use the links below to navigate to whichever post you might be interested in.
 
 ### Table of Contents
 
