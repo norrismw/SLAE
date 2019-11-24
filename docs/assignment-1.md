@@ -335,7 +335,7 @@ int 0x80
 Another `PUSH` instruction is used which serves as a delimeter for the second and third arguments. Immediately after the referenced `PUSH` instruction, the memory address stored in `ESP` is moved to `EDX` to be pased as the third argument to `execve`. Next, the memory address value in `EBX` which is the location of the `/bin/sh` string in memory is pushed to the stack. Now, the stack contains the memory address of `/bin/sh` string's location in memory followed by `NULL`, and therefore the memory address in `ESP` serves as a pointer to the array of arguments to be passed to `/bin/sh`. The value in `ESP` is moved to `ECX` to be passed as the second argument for `execve`. The `execve` system call number is moved into `AL` before the software interrupt occurs.
 
 ## Completed Assembly Program
-Shown below is the assembly program described above in its entirety. Some of the comments from the code above have been removed. The fully commented version of the code can be found on GitHub.
+Shown below is the assembly program described above in its entirety. Some of the comments from the code above have been removed. The fully commented version of the code can be found on [GitHub](https://github.com/norrismw/SLAE).
 
 ```nasm
 ; shell_bind_tcp.nasm
@@ -546,7 +546,7 @@ As the `PUSH` instruction stores bytes to the stack in the order of least-signfi
 
 The program includes basic validation checks that can be altered in the future to provide encoding to account for `NULL` bytes introduced to the shellcode as a result of port number specification. Port values that result in a `NULL` byte are all values less than or equal to `256` (due to the low-order byte having all 8 bits set to `0`) and all other values that are evenly divisible by `256` (due to the high-order byte having all 8 bits set to `0`). A demonstration of the program follows.
 
-To save space, the program code has not been included here. The full code for the program can be found on GitHub. Using this program with the shellcode generated previously results in the following output:
+To save space, the program code has not been included here. The full code for the program can be found on [GitHub](https://github.com/norrismw/SLAE). Using this program with the shellcode generated previously results in the following output:
 
 ```shell
 root@kali:~/workspace/SLAE# python3 ConfShell.py bind 65000
